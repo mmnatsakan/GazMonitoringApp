@@ -5,7 +5,7 @@
 #include "JsonParser.h"
 
 class QLabel;
-class QTableWidget;
+class CustomTableWidget;
 
 class DetailsWidget : public QWidget
 {
@@ -33,8 +33,12 @@ private:
     QLabel* m_phoneLabel;
     QLabel* m_hashvichLabel;
 
-    QTableWidget* m_tableWidget;
+    CustomTableWidget* m_tableWidget;
 
+
+    // QObject interface
+public:
+    bool eventFilter(QObject *watched, QEvent *event);
 };
 
 #endif // DETAILSWIDGET_H

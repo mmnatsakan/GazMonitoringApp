@@ -11,13 +11,15 @@
 #include <QRadioButton>
 #include <QKeyEvent>
 #include <QApplication>
+#include <QTimer>
 
 
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent)
 {
     setWindowTitle("Բաժանորդի փնտրման ծրագիր");
-    setFixedSize(400, 600);
+    setMinimumSize(400, 600);
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     createMembers();
     installStyleSheets();
     setupLayout();
@@ -28,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_searchButton->setDisabled(true);
     m_hashvichRadioButton->setChecked(true);
     updateUI();
+
 }
 
 void MainWindow::createMembers()
@@ -41,7 +44,10 @@ void MainWindow::createMembers()
 
     m_searchLineEdit = new QLineEdit(this);
     m_searchLineEdit->setInputMethodHints(Qt::ImhDigitsOnly);
+    m_searchLineEdit->setAttribute(Qt::WA_AcceptTouchEvents);
+
     m_searchButton = new QPushButton("Փնտրել", this);
+    m_searchButton->setAttribute(Qt::WA_AcceptTouchEvents);
 }
 
 void MainWindow::installStyleSheets()
@@ -59,12 +65,10 @@ void MainWindow::setupLayout()
     radioButtonsLayout->addStretch();
 
     QHBoxLayout* searchLayout = new QHBoxLayout();
-    searchLayout->setContentsMargins(0, 0, 0, 0);
+    searchLayout->setContentsMargins(20, 0, 0, 0);
     searchLayout->setSpacing(10);
     searchLayout->addWidget(m_searchLineEdit);
     searchLayout->addWidget(m_searchButton);
-    searchLayout->addStretch();
-    searchLayout->addStretch();
 
     QVBoxLayout* topLayout = new QVBoxLayout();
     topLayout->setContentsMargins(0, 0, 0, 0);
@@ -113,6 +117,12 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
 }
 
 void MainWindow::updateUI() {
+    // QTimer::singleShot(50, this, [this]() {
+    //     this->update();
+    //     m_abonhamarRadioButton->update();
+    //     m_hashvichRadioButton->update();
+    // });
+
     QMetaObject::invokeMethod(this, [this]() {
         this->update();
         this->repaint();

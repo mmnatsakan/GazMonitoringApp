@@ -1,11 +1,14 @@
 #include "DetailsWidget.h"
 #include "JsonParser.h"
+#include "CustomTableWidget.h"
 
 #include <QLabel>
-#include <QTableWidget>
 #include <QHeaderView>
 #include <QBoxLayout>
 #include <QEvent>
+#include <QScroller>
+#include <QScrollBar>
+
 
 DetailsWidget::DetailsWidget(QWidget *parent)
     : QWidget{parent}
@@ -15,6 +18,7 @@ DetailsWidget::DetailsWidget(QWidget *parent)
     setupLayout();
     makeConnections();
     setWidgetsHidden(true);
+    m_tableWidget->verticalScrollBar()->installEventFilter(this);
 }
 
 void DetailsWidget::updateData(const QString &searchText, bool searchAbonhamar)
@@ -59,15 +63,7 @@ void DetailsWidget::createMembers()
     m_phoneLabel = new QLabel(m_dataWidget);
     m_hashvichLabel = new QLabel(m_dataWidget);
 
-    m_tableWidget = new QTableWidget(m_mainWidget);
-    m_tableWidget->setColumnCount(3);
-    m_tableWidget->setHorizontalHeaderLabels({"Տարի ամիս", "Հաշվեգրում", "Խախտում"});
-    m_tableWidget->verticalHeader()->setVisible(false);
-    m_tableWidget->setSelectionMode(QAbstractItemView::NoSelection);
-    m_tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    m_tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    m_tableWidget->setShowGrid(true);
-    m_tableWidget->setGridStyle(Qt::SolidLine);
+    m_tableWidget = new CustomTableWidget(m_mainWidget);
 
     m_noDataLabel = new QLabel("Տվյալները բացակայում են", m_mainWidget);
 }
@@ -115,14 +111,19 @@ void DetailsWidget::makeConnections()
 }
 
 void DetailsWidget::setupTable(const QList<GazQanak> &gazQanakList) {
+    m_tableWidget->setUpdatesEnabled(false);
+    m_tableWidget->clearContents();
+    m_tableWidget->setRowCount(gazQanakList.size());
+
     int row = 0;
     for (const GazQanak& gazQanak : gazQanakList) {
-        m_tableWidget->insertRow(row);
+        //m_tableWidget->insertRow(row);
         m_tableWidget->setItem(row, 0, new QTableWidgetItem(gazQanak.taram));
         m_tableWidget->setItem(row, 1, new QTableWidgetItem(gazQanak.hashxm));
         m_tableWidget->setItem(row, 2, new QTableWidgetItem(gazQanak.xaxthash));
         ++row;
     }
+    m_tableWidget->setUpdatesEnabled(true);
 }
 
 void DetailsWidget::setWidgetsHidden(bool isHidden)
@@ -130,4 +131,13 @@ void DetailsWidget::setWidgetsHidden(bool isHidden)
     m_dataWidget->setHidden(isHidden);
     m_tableWidget->setHidden(isHidden);
     m_noDataLabel->setHidden(!isHidden);
+}
+
+bool DetailsWidget::eventFilter(QObject *watched, QEvent *event)
+{
+    if(watched == m_tableWidget->verticalScrollBar())
+        if (event->type() == QEvent::Wheel)
+            qDebug() << event->type();
+
+    return QWidget::eventFilter(watched, event);
 }
