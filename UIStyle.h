@@ -24,7 +24,7 @@ const QString RADIO_BUTTON_STYLE_SHEET = "QRadioButton::indicator{width: 15px; h
                                         "QRadioButton::indicator::unchecked{image: url(':/icon_radiobutton_unchecked.svg');}"\
                                         "QRadioButton{color: #000000; font-size: 14px; font-family: Arial;}";
 
-const QString TABLE_WIDGET_STYLE_SHEET =    "QTableWidget {gridline-color: black; background-color: white; alternate-background-color: #f2f2f2; font-size: 14px; font-weight: 400}"\
+const QString TABLE_WIDGET_STYLE_SHEET =    "QTableWidget, QTableWidget:disabled {gridline-color: black; background-color: white; alternate-background-color: #f2f2f2; font-size: 14px; font-weight: 400}"\
                                             "QHeaderView::section {background-color: lightgray; padding: 5px; border: 1px solid black; font-size: 14px; font-weight: 600;}"\
                                             "QTableWidget::item {border: 1px solid black; padding: 5px;}";
 

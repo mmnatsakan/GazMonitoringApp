@@ -19,6 +19,7 @@ struct MainData
     QString sot_hamar;
     QString hashvich;
     QString hashvichn;
+    QString kniq;
     QList<GazQanak> gazQanakList;
 };
 

@@ -17,7 +17,8 @@ MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent)
 {
     setWindowTitle("Բաժանորդի փնտրման ծրագիր");
-    setFixedSize(400, 600);
+    setMinimumSize(400, 400);
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     createMembers();
     installStyleSheets();
     setupLayout();
@@ -41,7 +42,9 @@ void MainWindow::createMembers()
 
     m_searchLineEdit = new QLineEdit(this);
     m_searchLineEdit->setInputMethodHints(Qt::ImhDigitsOnly);
+    m_searchLineEdit->setAttribute(Qt::WA_AcceptTouchEvents);
     m_searchButton = new QPushButton("Փնտրել", this);
+    m_searchButton->setAttribute(Qt::WA_AcceptTouchEvents);
 }
 
 void MainWindow::installStyleSheets()
@@ -59,12 +62,10 @@ void MainWindow::setupLayout()
     radioButtonsLayout->addStretch();
 
     QHBoxLayout* searchLayout = new QHBoxLayout();
-    searchLayout->setContentsMargins(0, 0, 0, 0);
-    searchLayout->setSpacing(10);
+    searchLayout->setContentsMargins(20, 0, 20, 0);
+    searchLayout->setSpacing(20);
     searchLayout->addWidget(m_searchLineEdit);
     searchLayout->addWidget(m_searchButton);
-    searchLayout->addStretch();
-    searchLayout->addStretch();
 
     QVBoxLayout* topLayout = new QVBoxLayout();
     topLayout->setContentsMargins(0, 0, 0, 0);
@@ -77,6 +78,7 @@ void MainWindow::setupLayout()
     mainLayout->setSpacing(10);
     mainLayout->addLayout(topLayout);
     mainLayout->addWidget(m_detailsWidget);
+    mainLayout->addSpacing(10);
     this->setLayout(mainLayout);
 }
 
@@ -118,6 +120,7 @@ void MainWindow::updateUI() {
         this->repaint();
         m_abonhamarRadioButton->update();
         m_hashvichRadioButton->update();
+        //m_searchLineEdit->setFocus();
         QApplication::processEvents();
     }, Qt::QueuedConnection);
 }
