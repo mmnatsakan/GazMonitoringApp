@@ -1,41 +1,28 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef MAINWIDGET_H
+#define MAINWIDGET_H
 
 #include <QWidget>
 
-class QPushButton;
-class QLineEdit;
-class QScrollArea;
-class QRadioButton;
-class DetailsWidget;
-
+class QStackedWidget;
+class CucBlankPage;
+class StartPage;
 
 class MainWindow : public QWidget
 {
     Q_OBJECT
-
 public:
-    MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(QWidget *parent = nullptr);
 
 private:
     void createMembers();
-    void installStyleSheets();
-    void setupLayout();
     void makeConnections();
-    void updateUI();
+    void setupLayout();
 
-    QRadioButton* m_abonhamarRadioButton;
-    QRadioButton* m_hashvichRadioButton;
+    QStackedWidget* m_stackedWidget;
+    CucBlankPage* m_cucBlankPage;
+    StartPage* m_startPage;
 
-    QLineEdit* m_searchLineEdit;
-    QPushButton* m_searchButton;
-
-    DetailsWidget* m_detailsWidget;
-
-private slots:
-    void onSearchButtonClickedSlot();
-
-protected:
-    void keyReleaseEvent(QKeyEvent *event);
+signals:
 };
-#endif // MAINWINDOW_H
+
+#endif // MAINWIDGET_H

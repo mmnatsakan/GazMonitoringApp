@@ -5,5 +5,6 @@
         <file alias="icon_radiobutton_unchecked.svg">icon_radiobutton_unchecked.svg</file>
         <file alias="down_arrow.svg">down_arrow.svg</file>
         <file alias="up_arrow.svg">up_arrow.svg</file>
+        <file alias="/icons/down_arrow_big.svg">icons/down_arrow_big.svg</file>
     </qresource>
 </RCC>

@@ -4,10 +4,11 @@
 #include <QString>
 
 const QString LABEL_STYLE_SHEET = "QLabel{ font-size: 14px; color: #000000; border: none;}";
+const QString START_PAGE_LABEL_STYLE_SHEET = "QLabel{ font-size: 18px; color: #000000; font-weight: 600; border: none;}";
 
-const QString LINE_EDIT_STYLE_SHEET =  "QLineEdit{padding: 5px 5px; font-size: 14px; font-weight: 400; font-family: Arial; color: red; background: #98FF98; border: 1px solid green; border-radius: 10px;}";
+const QString LINE_EDIT_STYLE_SHEET =  "QLineEdit{padding: 5px 5px; font-size: 14px; font-weight: 400; color: red; background: #98FF98; border: 1px solid green; border-radius: 10px;}";
 
-const QString PUSH_BUTTON_STYLE_SHEET = "QPushButton{border: none; outline: none; color: #000000; font-size: 14px;  font-family: Arial; font-weight: 600; background: #87CEEB; border-radius: 5px; padding: 7px 20px;}"\
+const QString PUSH_BUTTON_STYLE_SHEET = "QPushButton{border: none; outline: none; color: #000000; font-size: 18px; font-weight: 600; background: #87CEEB; border-radius: 5px; padding: 7px 20px;}"\
                                         "QPushButton:disabled{background: transparent; border: 1px solid #999ca6;}"\
                                         "QPushButton:hover{background: #02768C;}"\
                                         "QPushButton:pressed{background: #318394;}";
@@ -28,4 +29,21 @@ const QString TABLE_WIDGET_STYLE_SHEET =    "QTableWidget, QTableWidget:disabled
                                             "QHeaderView::section {background-color: lightgray; padding: 5px; border: 1px solid black; font-size: 14px; font-weight: 600;}"\
                                             "QTableWidget::item {border: 1px solid black; padding: 5px;}";
 
+const QString COMBOBOX_STYLE_SHEET =    "QComboBox {height: 18px; background-color: #ffffff; color: #000000; border-radius: 2px; font-size: 18px; font-weight: 600; padding-top: 10px; padding-bottom: 10px; padding-left: 5px;}"\
+                                        "QComboBox:on{background-color: lightBlue;}"\
+                                        "QAbstractItemView{border-radius: 2px; border: 1px solid gray; background-color: #FFFFFF;}"\
+                                        "QAbstractItemView::item{ color: #000000; border-radius: 2px; background-color: transparent; margin: 5px;}"\
+                                        "QAbstractItemView::item:hover{background-color: #dddddd}"\
+                                        "QComboBox::item{border: none;}"\
+                                        "QComboBox::drop-down {border: none; background: transparent;}"\
+                                        "QComboBox::down-arrow{ image: url(':/icons/down_arrow_big.svg'); margin-right: 4px; margin-left: 2px}";
+
+const QString TABLE_VIEW_STYLE_SHEET = "QTableView {background-color: rgb(255, 255, 255); alternate-background-color: rgb(200, 200, 200); border: none; gridline-color: rgb(231, 231, 231);"
+                                       "font-size: 16px; color: rgb(0, 0, 0); }"
+                                       "QTableView::item { background-color: transparent; }"
+                                       "QTableView::item:selected { background-color: lightBlue; }"
+                                       "QTableView::viewport { background-color: rgb(255, 255, 255); }"
+                                       "QHeaderView { background: rgb(255, 255, 255); border: 1px solid rgb(231, 231, 231);}"
+                                       "QHeaderView::section { text-align: center; min-width: 30px; min-height: 50px; border: 1px outset rgb(223, 223, 223);"
+                                       " font-size: 16px; background-color: rgb(255, 255, 255); color: rgb(222, 109, 5); }";
 #endif // UISTYLE_H
