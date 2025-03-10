@@ -6,6 +6,7 @@
 
 class QLabel;
 class QTableWidget;
+class QPushButton;
 
 class DetailsWidget : public QWidget
 {
@@ -21,6 +22,8 @@ private:
     void makeConnections();
     void setupTable(const QList<GazQanak>& gazQanakList);
     void setWidgetsHidden(bool isHidden);
+    void updateUI();
+    void updateArrows();
 
     QLabel* m_noDataLabel;
 
@@ -32,8 +35,13 @@ private:
     QLabel* m_addressLabel;
     QLabel* m_phoneLabel;
     QLabel* m_hashvichLabel;
+    QLabel* m_kniqLabel;
 
     QTableWidget* m_tableWidget;
+
+    QPushButton* m_goUp;
+    QPushButton* m_goDown;
+
 
 };
 

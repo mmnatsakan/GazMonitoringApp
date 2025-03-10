@@ -3,5 +3,7 @@
         <file alias="output.json">output.json</file>
         <file alias="icon_radiobutton_checked.svg">icon_radiobutton_checked.svg</file>
         <file alias="icon_radiobutton_unchecked.svg">icon_radiobutton_unchecked.svg</file>
+        <file alias="down_arrow.svg">down_arrow.svg</file>
+        <file alias="up_arrow.svg">up_arrow.svg</file>
     </qresource>
 </RCC>
