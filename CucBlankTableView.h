@@ -12,7 +12,7 @@ class CucBlankTableView : public QTableView
 public:
     explicit CucBlankTableView(QWidget *parent = nullptr);
     void updateUiData(const QString& mkod, const QString& hskichkod, const QString& grancOr);
-    QPair<int, int> getCounts() const;
+    QMap<QString, QString> getInfo() const;
 
 
 private:

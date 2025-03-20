@@ -59,30 +59,24 @@ void CucBlankTableView::updateUiData(const QString& mkod, const QString& hskichk
 
     setColumnWidth(0, 200);
     setColumnWidth(1, 200);
-    // setColumnWidth(2, 90);
-    // setColumnWidth(3, 90);
-    // setColumnWidth(4, 90);
-    // setColumnWidth(5, 90);
-    // setColumnWidth(6, 90);
-    // setColumnWidth(7, 90);
-    // setColumnWidth(8, 90);
 }
 
-QPair<int, int> CucBlankTableView::getCounts() const
+QMap<QString, QString> CucBlankTableView::getInfo() const
 {
     QSqlQuery countQuery;
-    countQuery.prepare("SELECT sum(iif(hashverc is not null, 1, 0)) as nullCount, COUNT(*) as allCount FROM cucBlank "
+    countQuery.prepare("SELECT sum(iif(hashverc is not null, 1, 0)) as filledCount, COUNT(*) as totalCount, sum(hashxm) as totalHashxm FROM cucBlank "
                        "WHERE mkod = :mkod AND hskichkod = :hskichkod AND granc_or = :grancOr");
     countQuery.bindValue(":mkod", m_mkod);
     countQuery.bindValue(":hskichkod", m_hskichkod);
     countQuery.bindValue(":grancOr", m_grancOr);
     countQuery.exec();
 
-    QPair<int, int> countsPair;
+    QMap<QString, QString> infoMap;
     if (countQuery.next()) {
-        countsPair.first = countQuery.value(0).toInt();
-        countsPair.second = countQuery.value(1).toInt();
+        infoMap["filledCount"] = QString::number(countQuery.value(0).toInt());
+        infoMap["totalCount"] =  QString::number(countQuery.value(1).toInt());
+        infoMap["totalHashxm"] = QString::number(countQuery.value(2).toDouble(), 'f', 2);
     }
-    return countsPair;
+    return infoMap;
 }
 

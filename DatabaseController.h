@@ -4,20 +4,6 @@
 #include <QObject>
 #include <QSqlDatabase>
 
-struct CucBlankFields{
-    CucBlankFields() {}
-    QString aah;
-    QString hasce;
-    QString abonhamar;
-    QString hashvichn;
-    QString hashtip;
-    double hashnaxc;
-    double cucmunq;
-    double hashxm;
-    QString kniqner;
-    QString meknab;
-};
-
 class DatabaseController : public QObject
 {
 public:
@@ -31,7 +17,6 @@ public:
     QStringList getTtList();
     QStringList getHskichList(const QString& mkod);
     QStringList getDateList(const QString& mkod, const QString& hskichkod);
-    QList<CucBlankFields> getCucBlankTableData(const QString& mkod, const QString& hskichkod, const QString& grancOr) const;
 
 private:
     DatabaseController();

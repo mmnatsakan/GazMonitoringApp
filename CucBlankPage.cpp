@@ -40,7 +40,7 @@ void CucBlankPage::createMembers()
     m_ttLabel = new QLabel(m_mainWidget);
     m_hskichLabel = new QLabel(m_mainWidget);
     m_dateLabel = new QLabel(m_mainWidget);
-    m_totalHashxmLabel = new QLabel("Ընդ. 0.00 խմ", m_mainWidget);
+    m_totalHashxmLabel = new QLabel(m_mainWidget);
 
     m_tableView = new CucBlankTableView(m_mainWidget);
 }
@@ -94,6 +94,8 @@ void CucBlankPage::makeConnections()
 
 void CucBlankPage::updateCounts()
 {
-    QPair<int, int> countsPair = m_tableView->getCounts();
-    m_abonentCountLabel->setText(QString::number(countsPair.first) + " / " + QString::number(countsPair.second));
+    QMap<QString, QString> infoMap = m_tableView->getInfo();
+
+    m_abonentCountLabel->setText(infoMap["filledCount"] + " / " + infoMap["totalCount"]);
+    m_totalHashxmLabel->setText("Ընդ. " + infoMap["totalHashxm"] + " խմ");
 }

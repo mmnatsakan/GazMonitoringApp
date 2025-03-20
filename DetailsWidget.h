@@ -20,7 +20,7 @@ private:
     void installStyleSheets();
     void setupLayout();
     void makeConnections();
-    void setupTable(const QList<GazQanak>& gazQanakList);
+    void setupTable(const QList<AmisData>& gazQanakList);
     void setWidgetsHidden(bool isHidden);
     void updateUI();
     void updateArrows();
@@ -28,19 +28,13 @@ private:
     QLabel* m_noDataLabel;
 
     QWidget* m_mainWidget;
-    QWidget* m_dataWidget;
 
-    QLabel* m_customerIdLabel;
-    QLabel* m_nameLabel;
-    QLabel* m_addressLabel;
-    QLabel* m_phoneLabel;
-    QLabel* m_hashvichLabel;
-    QLabel* m_kniqLabel;
+    QLabel* m_customerLabel;
 
     QTableWidget* m_tableWidget;
 
-    QPushButton* m_goUp;
-    QPushButton* m_goDown;
+    // QPushButton* m_goUp;
+    // QPushButton* m_goDown;
 
 
 };

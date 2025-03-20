@@ -127,7 +127,6 @@ QStringList DatabaseController::getDateList(const QString &mkod, const QString &
     QSqlQuery query;
     query.prepare(QString("SELECT distinct substr(%1, 1, 10) || ' (Գույք. օր ' || %2 || ')'  as name FROM %3 where mkod = %4 and hskichkod = %5 order by %2").arg( "dat_or", "granc_or", "Cucblank", mkod, hskichkod));
 
-    qDebug() << query.lastQuery();
     if (!query.exec()) {
         qWarning() << "Query execution failed:" << query.lastError().text();
         return dataList;
@@ -137,42 +136,6 @@ QStringList DatabaseController::getDateList(const QString &mkod, const QString &
         dataList << query.value(0).toString();
     }
 
-    return dataList;
-}
-
-QList<CucBlankFields> DatabaseController::getCucBlankTableData(const QString &mkod, const QString &hskichkod, const QString &grancOr) const
-{
-    QList<CucBlankFields> dataList;
-    QSqlQuery query;
-    query.prepare(QString("SELECT ROW_NUMBER() OVER (ORDER BY mkod) AS ID, mkod, hskichkod, TRIM(aah) AS aah, TRIM(hasce) AS hasce, abonhamar, TRIM(hashvichn) AS hashvichn, "
-                            "TRIM(hash_tes) AS hash_tes, hashnaxc, hashverc, hashxm, TRIM(kniq_n) AS kniq_n, hashtipkod, hert, bnakvajr, poxoc, tun, bnakaran, meknab "
-                            "FROM cucBlank "
-                            "WHERE mkod = :mkod and hskichkod = :hskichkod and granc_or = :grancOr "
-                            "ORDER BY mkod, hert, bnakvajr, poxoc, tun, bnakaran, abonhamar, hashvichn"));
-    query.bindValue(":mkod", mkod);
-    query.bindValue(":hskichkod", hskichkod);
-    query.bindValue(":grancOr", grancOr);
-
-    qDebug() << query.lastQuery();
-    if (!query.exec()) {
-        qWarning() << "Query execution failed:" << query.lastError().text();
-        return dataList;
-    }
-
-    while (query.next()) {
-        CucBlankFields cucBlankFields;
-        cucBlankFields.aah = query.value(1).toString();
-        cucBlankFields.hasce = query.value(2).toString();
-        cucBlankFields.abonhamar = query.value(3).toString();
-        cucBlankFields.hashvichn = query.value(4).toString();
-        cucBlankFields.hashtip = query.value(5).toString();
-        cucBlankFields.hashnaxc = query.value(6).toDouble();
-        cucBlankFields.cucmunq = query.value(7).toDouble();
-        cucBlankFields.hashxm = query.value(8).toDouble();
-        cucBlankFields.kniqner = query.value(9).toString();
-        cucBlankFields.meknab = query.value(10).toString();
-        dataList << cucBlankFields;
-    }
     return dataList;
 }
 

@@ -46,14 +46,22 @@ bool JsonParser::parseJsonFile(const QString& jsonFilePath)
             mainData.hashvichn = obj.value("hashvichn").toString();
             mainData.kniq = obj.value("kniq").toString();
 
+            AmisData amisData;
             QStringList gazList = obj.value("gaz").toString().split(";");
-            for(const QString& gazQanakDatas : gazList){
-                QStringList gazQanakData = gazQanakDatas.split("_");
-                GazQanak gazQanak;
-                gazQanak.taram = gazQanakData.at(0);
-                gazQanak.hashxm = gazQanakData.at(1);
-                gazQanak.xaxthash = gazQanakData.at(2);
-                mainData.gazQanakList << gazQanak;
+            QStringList kniqList = obj.value("kniqner").toString().split(";");
+            for(int i = 0; i < gazList.count() - 1; ++i){
+                if(!gazList.at(i).isEmpty()){
+                    QStringList gazQanakData = gazList.at(i).split("_");
+                    amisData.taram = gazQanakData.at(0);
+                    amisData.hashxm = gazQanakData.at(1);
+                    amisData.xaxthash = gazQanakData.at(2);
+                }
+                if(i < kniqList.count() && !kniqList.at(i).isEmpty()){
+                    QStringList kniqData = kniqList.at(i).split("_");
+                    amisData.hashvichn = kniqData.at(1);
+                    amisData.kniqner = kniqData.at(2);
+                }
+                mainData.tableDataList << amisData;
             }
             m_mainData << mainData;
         }

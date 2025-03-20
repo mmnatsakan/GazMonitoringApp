@@ -3,11 +3,13 @@
 
 #include <QJsonObject>
 
-struct GazQanak{
-    GazQanak() {}
+struct AmisData{
+    AmisData() {}
     QString taram;
     QString hashxm;
     QString xaxthash;
+    QString hashvichn;
+    QString kniqner;
 };
 
 struct MainData
@@ -20,7 +22,7 @@ struct MainData
     QString hashvich;
     QString hashvichn;
     QString kniq;
-    QList<GazQanak> gazQanakList;
+    QList<AmisData> tableDataList;
 };
 
 class QJsonArray;

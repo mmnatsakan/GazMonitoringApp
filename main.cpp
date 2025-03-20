@@ -1,4 +1,5 @@
 #include "MainWindow.h"
+#include "SearchAbonentWidget.h"
 
 #include <QApplication>
 
@@ -18,6 +19,7 @@ int main(int argc, char *argv[])
 //#endif
 
     MainWindow w;
+    //SearchAbonentWidget w;
     w.show();
     return a.exec();
 }
