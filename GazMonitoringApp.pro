@@ -15,6 +15,8 @@ SOURCES += \
     DetailsWidget.cpp \
     JsonParser.cpp \
     MainWindow.cpp \
+    MonitoringPage.cpp \
+    MonitoringTableView.cpp \
     SearchAbonentWidget.cpp \
     SqlQueryModel.cpp \
     StartPage.cpp \
@@ -28,6 +30,8 @@ HEADERS += \
     Json/Json.h \
     JsonParser.h \
     MainWindow.h \
+    MonitoringPage.h \
+    MonitoringTableView.h \
     SearchAbonentWidget.h \
     SqlQueryModel.h \
     StartPage.h \

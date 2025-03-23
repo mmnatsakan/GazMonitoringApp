@@ -25,11 +25,9 @@ private:
 
     QLabel* m_ttLabel;
     QLabel* m_hskichLabel;
-    QLabel* m_dateLabel;
 
     QComboBox* m_ttComboBox;
     QComboBox* m_hskichComboBox;
-    QComboBox* m_dateComboBox;
 
     QPushButton* m_enterButton;
     QPushButton* m_cancelButton;

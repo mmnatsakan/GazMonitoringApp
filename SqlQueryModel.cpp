@@ -21,7 +21,7 @@ void SqlQueryModel::refresh() {
     QSqlQuery query(QSqlDatabase::database());
 
     QString finalQueryString = m_baseQuery; //+ m_filterText + m_sortText;
-
+    qDebug() << finalQueryString;
     if (!query.exec(finalQueryString)) {
         qWarning() << "Query execution failed:" << query.lastError();
         return;
@@ -34,7 +34,7 @@ void SqlQueryModel::refresh() {
 
 Qt::ItemFlags SqlQueryModel::flags(const QModelIndex &index) const {
     Qt::ItemFlags flags = QSqlQueryModel::flags(index);
-    if (index.column() == 6 || index.column() == 9)
+    if (index.column() == 5 || index.column() == 6)
         flags |= Qt::ItemIsEditable;
     return flags;
 }
@@ -74,7 +74,7 @@ QVariant SqlQueryModel::data(const QModelIndex &index, int role) const
 }
 
 bool SqlQueryModel::setData(const QModelIndex &index, const QVariant &value, int role) {
-    if (role != Qt::EditRole || !updateDatabaseTable(index, value))
+    if (role != Qt::EditRole || !updateMonitoringTable(index, value))
         return false;
 
     this->setQuery(this->query().lastQuery());
@@ -84,13 +84,32 @@ bool SqlQueryModel::setData(const QModelIndex &index, const QVariant &value, int
 
 bool SqlQueryModel::updateDatabaseTable(const QModelIndex &index, const QVariant &value)
 {
+    // QString abonhamar = record(index.row()).value("abonhamar").toString();
+    // QSqlQuery query;
+    // if(index.column() == 6){
+        // query.prepare(QString("UPDATE cucBlank SET hashverc = %1, hashxm = %2 WHERE mkod = %3 and abonhamar = %4 ").arg(value.toString(), calculateHashxm(index, value), m_mkod, abonhamar));
+    // }
+    // else if(index.column() == 9)
+        // query.prepare(QString("UPDATE cucBlank SET meknab = %1, WHERE mkod = %2 and abonhamar = %3 ").arg(value.toString(), m_mkod, abonhamar));
+    // else
+        // return false;
+    // qDebug() << query.lastQuery();
+    // if (!query.exec()) {
+        // qWarning() << "Update failed:" << query.lastError().text();
+        // return false;
+    // }
+    return true;
+}
+
+bool SqlQueryModel::updateMonitoringTable(const QModelIndex &index, const QVariant &value)
+{
     QString abonhamar = record(index.row()).value("abonhamar").toString();
     QSqlQuery query;
-    if(index.column() == 6){
-        query.prepare(QString("UPDATE cucBlank SET hashverc = %1, hashxm = %2 WHERE mkod = %3 and abonhamar = %4 ").arg(value.toString(), calculateHashxm(index, value), m_mkod, abonhamar));
+    if(index.column() == 5){
+        query.prepare(QString("UPDATE cucak SET hashverc = %1 WHERE mkod = %2 and abonhamar = %3 ").arg(value.toString(), m_mkod, abonhamar));
     }
-    else if(index.column() == 9)
-        query.prepare(QString("UPDATE cucBlank SET meknab = %1, WHERE mkod = %2 and abonhamar = %3 ").arg(value.toString(), m_mkod, abonhamar));
+    else if(index.column() == 6)
+        query.prepare(QString("UPDATE cucak SET meknab = '%1' WHERE mkod = %2 and abonhamar = %3 ").arg(value.toString(), m_mkod, abonhamar));
     else
         return false;
     qDebug() << query.lastQuery();

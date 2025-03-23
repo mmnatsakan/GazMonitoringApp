@@ -1,7 +1,7 @@
 #include "MainWindow.h"
 #include "DatabaseController.h"
 #include "StartPage.h"
-#include "CucBlankPage.h"
+#include "MonitoringPage.h"
 
 #include <QStackedWidget>
 #include <QBoxLayout>
@@ -20,20 +20,20 @@ void MainWindow::createMembers()
 {
     m_stackedWidget = new QStackedWidget(this);
     m_startPage = new StartPage(m_stackedWidget);
-    m_cucBlankPage = new CucBlankPage(m_stackedWidget);
+    m_monitoringPage = new MonitoringPage(m_stackedWidget);
 
     m_stackedWidget->addWidget(m_startPage);
-    m_stackedWidget->addWidget(m_cucBlankPage);
+    m_stackedWidget->addWidget(m_monitoringPage);
     m_stackedWidget->setCurrentIndex(0);
 }
 
 void MainWindow::makeConnections()
 {
     connect(m_startPage, &StartPage::mainDataReady, this, [this](){
-        m_cucBlankPage->updateData(m_startPage->getMainData());
+        m_monitoringPage->updateData(m_startPage->getMainData());
         m_stackedWidget->setCurrentIndex(1);
     } );
-    connect(m_cucBlankPage, &CucBlankPage::goToStartPage, this, [this](){
+    connect(m_monitoringPage, &MonitoringPage::goToStartPage, this, [this](){
 
         m_stackedWidget->setCurrentIndex(0);
     });

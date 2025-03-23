@@ -16,7 +16,6 @@ public:
 
     QStringList getTtList();
     QStringList getHskichList(const QString& mkod);
-    QStringList getDateList(const QString& mkod, const QString& hskichkod);
 
 private:
     DatabaseController();

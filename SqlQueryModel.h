@@ -20,6 +20,7 @@ public:
 
 private:
     bool updateDatabaseTable(const QModelIndex &index, const QVariant &value);
+    bool updateMonitoringTable(const QModelIndex &index, const QVariant &value);
     QString calculateHashxm(const QModelIndex &index, const QVariant &value);
     QString m_baseQuery;
     QString m_mkod;

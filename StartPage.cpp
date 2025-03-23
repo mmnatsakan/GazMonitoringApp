@@ -22,7 +22,6 @@ QMap<QString, QString> StartPage::getMainData() const
     QMap<QString, QString> dataMap;
     dataMap["tt"] = m_ttComboBox->currentText().trimmed();
     dataMap["hskich"] = m_hskichComboBox->currentText().trimmed();
-    dataMap["date"] = m_dateComboBox->currentText().trimmed();
     return dataMap;
 }
 
@@ -33,21 +32,17 @@ void StartPage::createMembers()
 
     m_ttLabel = new QLabel("ԱՇԾ", m_centralWidget);
     m_hskichLabel = new QLabel("Հսկիչ", m_centralWidget);
-    m_dateLabel = new QLabel("Գույք․ օր", m_centralWidget);
 
     m_ttComboBox = new QComboBox(m_centralWidget);
     m_hskichComboBox = new QComboBox(m_centralWidget);
-    m_dateComboBox = new QComboBox(m_centralWidget);
 
     m_ttComboBox->addItems(DatabaseController::instance()->getTtList());
     m_mkod = m_ttComboBox->currentText().left(2);
     m_hskichComboBox->addItems(DatabaseController::instance()->getHskichList(m_mkod));
     m_hskichkod = m_hskichComboBox->currentText().left(2);
-    m_dateComboBox->addItems(DatabaseController::instance()->getDateList(m_mkod, m_hskichkod));
 
     m_ttComboBox->setFixedSize(400, 50);
     m_hskichComboBox->setFixedSize(400, 50);
-    m_dateComboBox->setFixedSize(300, 50);
 
     m_enterButton = new QPushButton("Մուտք", m_centralWidget);
     m_cancelButton = new QPushButton("Չեղարկել", m_centralWidget);
@@ -70,8 +65,6 @@ void StartPage::setupLayout()
     gridLayout->addWidget(m_ttComboBox, 0, 1, Qt::AlignLeft);
     gridLayout->addWidget(m_hskichLabel, 1, 0, Qt::AlignRight);
     gridLayout->addWidget(m_hskichComboBox, 1, 1, Qt::AlignLeft);
-    gridLayout->addWidget(m_dateLabel, 2, 0, Qt::AlignRight);
-    gridLayout->addWidget(m_dateComboBox, 2, 1, Qt::AlignLeft);
 
     QHBoxLayout* buttonsLayout = new QHBoxLayout();
     buttonsLayout->setContentsMargins(0, 0, 0, 0);
@@ -113,16 +106,12 @@ void StartPage::makeConnections()
 {
     connect(m_ttComboBox, &QComboBox::currentTextChanged, this, [=](const QString& text){
         m_hskichComboBox->clear();
-        m_dateComboBox->clear();
         m_mkod = text.left(2);
         m_hskichComboBox->addItems(DatabaseController::instance()->getHskichList(m_mkod));
         m_hskichkod = m_hskichComboBox->currentText().left(2);
-        m_dateComboBox->addItems(DatabaseController::instance()->getDateList(m_mkod, m_hskichkod));
     });
     connect(m_hskichComboBox, &QComboBox::currentTextChanged, this, [=](const QString& text){
-        m_dateComboBox->clear();
         m_hskichkod = text.left(2);
-        m_dateComboBox->addItems(DatabaseController::instance()->getDateList(m_mkod, m_hskichkod));
     });
     connect(m_enterButton, &QPushButton::clicked, this, [=](){
         emit mainDataReady();

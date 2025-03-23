@@ -4,7 +4,7 @@
 #include <QWidget>
 
 class QStackedWidget;
-class CucBlankPage;
+class MonitoringPage;
 class StartPage;
 
 class MainWindow : public QWidget
@@ -19,7 +19,7 @@ private:
     void setupLayout();
 
     QStackedWidget* m_stackedWidget;
-    CucBlankPage* m_cucBlankPage;
+    MonitoringPage* m_monitoringPage;
     StartPage* m_startPage;
 
 signals:

@@ -60,7 +60,7 @@ bool DatabaseController::openDatabase() {
     QString writablePath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     QString dbFilePath = writablePath + "/mydb.db";
 #else
-    QString dbFilePath = "D:/CucBlank_11.sqlite";
+    QString dbFilePath = "D:/Monitoring.sqlite";
 
 #endif
 
@@ -107,25 +107,7 @@ QStringList DatabaseController::getHskichList(const QString &mkod)
     QSqlQuery query;
     query.prepare(QString("SELECT %1 || '_' || %2 as name FROM %3 a "
                           " INNER JOIN (select distinct mkod, hskichkod from %4) b on a.mkod = b.mkod and a.kod = b.hskichkod "
-                          " where a.mkod = %5").arg("kod", "anun", "Hskich", "cucblank", mkod));
-
-    if (!query.exec()) {
-        qWarning() << "Query execution failed:" << query.lastError().text();
-        return dataList;
-    }
-
-    while (query.next()) {
-        dataList << query.value(0).toString();
-    }
-
-    return dataList;
-}
-
-QStringList DatabaseController::getDateList(const QString &mkod, const QString &hskichkod)
-{
-    QStringList dataList;
-    QSqlQuery query;
-    query.prepare(QString("SELECT distinct substr(%1, 1, 10) || ' (Գույք. օր ' || %2 || ')'  as name FROM %3 where mkod = %4 and hskichkod = %5 order by %2").arg( "dat_or", "granc_or", "Cucblank", mkod, hskichkod));
+                          " where a.mkod = %5").arg("kod", "anun", "Hskich", "cucak", mkod));
 
     if (!query.exec()) {
         qWarning() << "Query execution failed:" << query.lastError().text();
