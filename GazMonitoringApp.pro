@@ -42,7 +42,12 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
+ANDROID_APP_NAME = "Gaz_Malatya"
+TARGET = Gaz_Malatya
+QT_ANDROID_PACKAGE_NAME = com.MMV.Gaz_Malatya
+
 RESOURCES += \
     Resources.qrc
 
 DISTFILES +=
+

@@ -11,7 +11,7 @@ class MonitoringTableView : public QTableView
     Q_OBJECT
 public:
     explicit MonitoringTableView(QWidget *parent = nullptr);
-    void updateUiData(const QString& mkod, const QString& hskichkod, const QString& grancOr);
+    void updateUiData(const QString& mkod, const QString& hskichkod);
     QMap<QString, QString> getInfo() const;
 
 

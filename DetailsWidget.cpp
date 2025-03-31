@@ -10,7 +10,7 @@
 #include <QPushButton>
 #include <QDebug>
 
-const int STEP = 5;
+//const int STEP = 5;
 
 DetailsWidget::DetailsWidget(QWidget *parent)
     : QWidget(parent)
@@ -61,8 +61,8 @@ void DetailsWidget::updateData(const QString &searchText, bool searchAbonhamar)
         setWidgetsHidden(false);
         // Enable the table widget for interaction when data is available.
         m_tableWidget->setDisabled(false);
-        m_customerLabel->setText(mainData.abonhamar + ", " + mainData.aah + "\n" +
-                                 mainData.hasce + ", " + mainData.sot_hamar);
+        m_customerLabel->setText(mainData.abonhamar + ", " + mainData.aah + ", " +
+                                 mainData.hasce + ", Հեռ`0" + mainData.sot_hamar + ", Ցուցմունք՝ " + mainData.hashnaxc);
         setupTable(mainData.tableDataList);
     }
 }
@@ -71,12 +71,14 @@ void DetailsWidget::createMembers()
 {
     m_mainWidget = new QWidget(this);
     m_customerLabel = new QLabel(m_mainWidget);
+    m_customerLabel->setWordWrap(true);
 
     m_tableWidget = new QTableWidget(m_mainWidget);
     m_tableWidget->setColumnCount(4);
     m_tableWidget->setHorizontalHeaderLabels({"Տարամ", "գազ", "Խախտ", "Հաշվիչ\nԿնիքներ"});
     m_tableWidget->verticalHeader()->setVisible(false);
-    m_tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    m_tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    m_tableWidget->horizontalHeader()->setStretchLastSection(true);
     m_tableWidget->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     m_tableWidget->setShowGrid(true);
     m_tableWidget->setGridStyle(Qt::SolidLine);

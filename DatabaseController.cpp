@@ -58,7 +58,7 @@ bool DatabaseController::openDatabase() {
 #ifdef ANDROID
     copyDatabaseIfNeeded();
     QString writablePath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-    QString dbFilePath = writablePath + "/mydb.db";
+    QString dbFilePath = writablePath + "/Monitoring.sqlite";
 #else
     QString dbFilePath = "D:/Monitoring.sqlite";
 

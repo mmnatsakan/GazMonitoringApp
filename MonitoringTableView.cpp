@@ -24,8 +24,8 @@ MonitoringTableView::MonitoringTableView(QWidget *parent)
     horizontalHeader()->setStretchLastSection(true);
     setSelectionBehavior(QTableView::SelectRows);
 
-    verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
-    verticalHeader()->setDefaultSectionSize(50);
+    verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    verticalHeader()->setDefaultSectionSize(150);
 
     verticalScrollBar()->setStyleSheet(SCROLLBAR_STYLE_SHEET);
     horizontalScrollBar()->setStyleSheet(SCROLLBAR_STYLE_SHEET);
@@ -40,7 +40,7 @@ MonitoringTableView::MonitoringTableView(QWidget *parent)
     connect(m_model, &QSqlQueryModel::dataChanged, this, &MonitoringTableView::dataUpdated);
 }
 
-void MonitoringTableView::updateUiData(const QString& mkod, const QString& hskichkod, const QString& grancOr)
+void MonitoringTableView::updateUiData(const QString& mkod, const QString& hskichkod)
 {
     m_mkod = mkod;
     m_hskichkod = hskichkod;
@@ -61,10 +61,11 @@ void MonitoringTableView::updateUiData(const QString& mkod, const QString& hskic
 QMap<QString, QString> MonitoringTableView::getInfo() const
 {
     QSqlQuery countQuery;
-    countQuery.prepare("SELECT sum(iif(hashverc is not null, 1, 0)) as filledCount, COUNT(*) as totalCount, sum(hashxm) as totalHashxm FROM cucak "
+    countQuery.prepare("SELECT sum(iif(hashverc is not null, 1, 0)) as filledCount, COUNT(*) as totalCount FROM cucak "
                        "WHERE mkod = :mkod AND hskichkod = :hskichkod");
     countQuery.bindValue(":mkod", m_mkod);
     countQuery.bindValue(":hskichkod", m_hskichkod);
+    qDebug() << countQuery.lastQuery();
     countQuery.exec();
 
     QMap<QString, QString> infoMap;
@@ -72,6 +73,7 @@ QMap<QString, QString> MonitoringTableView::getInfo() const
         infoMap["filledCount"] = QString::number(countQuery.value(0).toInt());
         infoMap["totalCount"] =  QString::number(countQuery.value(1).toInt());
     }
+    qDebug() << infoMap;
     return infoMap;
 }
 

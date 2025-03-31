@@ -44,7 +44,10 @@ bool JsonParser::parseJsonFile(const QString& jsonFilePath)
             mainData.sot_hamar = obj.value("sot_hamar").toString();
             mainData.hashvich = obj.value("hashvich").toString();
             mainData.hashvichn = obj.value("hashvichn").toString();
+            mainData.hashnaxc = obj.value("hashnaxc").toString();
             mainData.kniq = obj.value("kniq").toString();
+            if(mainData.abonhamar == "206494")
+                qDebug() << mainData.hashvichn << " *** " << obj.value("kniqner").toString().split(";");
 
             AmisData amisData;
             QStringList gazList = obj.value("gaz").toString().split(";");

@@ -8,6 +8,7 @@
 #define FILTER_DELAY_TIME 300
 
 SqlQueryModel::SqlQueryModel(QSqlQueryModel* parent)
+    :QSqlQueryModel(parent)
 {
     // m_filterTimer = new QTimer(this);
     // m_filterTimer->setSingleShot(true);
@@ -84,6 +85,8 @@ bool SqlQueryModel::setData(const QModelIndex &index, const QVariant &value, int
 
 bool SqlQueryModel::updateDatabaseTable(const QModelIndex &index, const QVariant &value)
 {
+    Q_UNUSED(index);
+    Q_UNUSED(value);
     // QString abonhamar = record(index.row()).value("abonhamar").toString();
     // QSqlQuery query;
     // if(index.column() == 6){

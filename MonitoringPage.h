@@ -28,8 +28,6 @@ private:
     QLabel* m_abonentCountLabel;
     QLabel* m_ttLabel;
     QLabel* m_hskichLabel;
-    QLabel* m_dateLabel;
-    QLabel* m_totalHashxmLabel;
 
     MonitoringTableView* m_tableView;
 

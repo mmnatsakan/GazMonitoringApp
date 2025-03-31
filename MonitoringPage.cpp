@@ -24,8 +24,7 @@ void MonitoringPage::updateData(QMap<QString, QString> topWidgetDataMap)
 {
     m_ttLabel->setText(topWidgetDataMap["tt"]);
     m_hskichLabel->setText(topWidgetDataMap["hskich"]);
-    m_dateLabel->setText(topWidgetDataMap["date"]);
-    m_tableView->updateUiData(topWidgetDataMap["tt"].left(2), topWidgetDataMap["hskich"].left(2), topWidgetDataMap["date"].right(2).left(1));
+    m_tableView->updateUiData(topWidgetDataMap["tt"].left(2), topWidgetDataMap["hskich"].left(2));
     updateCounts();
 }
 
@@ -39,8 +38,6 @@ void MonitoringPage::createMembers()
     m_abonentCountLabel = new QLabel(m_mainWidget);
     m_ttLabel = new QLabel(m_mainWidget);
     m_hskichLabel = new QLabel(m_mainWidget);
-    m_dateLabel = new QLabel(m_mainWidget);
-    m_totalHashxmLabel = new QLabel(m_mainWidget);
 
     m_tableView = new MonitoringTableView(m_mainWidget);
 }
@@ -51,8 +48,6 @@ void MonitoringPage::installStyleSheets()
     m_abonentCountLabel->setStyleSheet("font-size: 18px; color: green; font-weight: 600; border: none;");
     m_ttLabel->setStyleSheet("font-size: 18px; color: black; font-weight: 600; border: none;");
     m_hskichLabel->setStyleSheet("font-size: 18px; color: black; font-weight: 600; border: none;");
-    m_dateLabel->setStyleSheet("font-size: 18px; color: black; font-weight: 600; border: none;");
-    m_totalHashxmLabel->setStyleSheet("font-size: 18px; color: green; font-weight: 600; border: none;");
 }
 
 void MonitoringPage::setupLayout()
@@ -68,9 +63,6 @@ void MonitoringPage::setupLayout()
     topLayout->addStretch();
     topLayout->addWidget(m_hskichLabel);
     topLayout->addStretch();
-    topLayout->addWidget(m_dateLabel);
-    topLayout->addStretch();
-    topLayout->addWidget(m_totalHashxmLabel);
 
     QVBoxLayout* mainLayout = new QVBoxLayout();
     mainLayout->setContentsMargins(10, 10, 10, 10);
@@ -97,5 +89,4 @@ void MonitoringPage::updateCounts()
     QMap<QString, QString> infoMap = m_tableView->getInfo();
 
     m_abonentCountLabel->setText(infoMap["filledCount"] + " / " + infoMap["totalCount"]);
-    m_totalHashxmLabel->setText("Ընդ. " + infoMap["totalHashxm"] + " խմ");
 }
