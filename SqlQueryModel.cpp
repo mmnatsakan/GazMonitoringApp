@@ -90,31 +90,41 @@ bool SqlQueryModel::updateDatabaseTable(const QModelIndex &index, const QVariant
     // QString abonhamar = record(index.row()).value("abonhamar").toString();
     // QSqlQuery query;
     // if(index.column() == 6){
-        // query.prepare(QString("UPDATE cucBlank SET hashverc = %1, hashxm = %2 WHERE mkod = %3 and abonhamar = %4 ").arg(value.toString(), calculateHashxm(index, value), m_mkod, abonhamar));
+    // query.prepare(QString("UPDATE cucBlank SET hashverc = %1, hashxm = %2 WHERE mkod = %3 and abonhamar = %4 ").arg(value.toString(), calculateHashxm(index, value), m_mkod, abonhamar));
     // }
     // else if(index.column() == 9)
-        // query.prepare(QString("UPDATE cucBlank SET meknab = %1, WHERE mkod = %2 and abonhamar = %3 ").arg(value.toString(), m_mkod, abonhamar));
+    // query.prepare(QString("UPDATE cucBlank SET meknab = %1, WHERE mkod = %2 and abonhamar = %3 ").arg(value.toString(), m_mkod, abonhamar));
     // else
-        // return false;
+    // return false;
     // qDebug() << query.lastQuery();
     // if (!query.exec()) {
-        // qWarning() << "Update failed:" << query.lastError().text();
-        // return false;
+    // qWarning() << "Update failed:" << query.lastError().text();
+    // return false;
     // }
     return true;
 }
 
 bool SqlQueryModel::updateMonitoringTable(const QModelIndex &index, const QVariant &value)
 {
-    QString abonhamar = record(index.row()).value("abonhamar").toString();
-    QSqlQuery query;
-    if(index.column() == 5){
-        query.prepare(QString("UPDATE cucak SET hashverc = %1 WHERE mkod = %2 and abonhamar = %3 ").arg(value.toString(), m_mkod, abonhamar));
-    }
-    else if(index.column() == 6)
-        query.prepare(QString("UPDATE cucak SET meknab = '%1' WHERE mkod = %2 and abonhamar = %3 ").arg(value.toString(), m_mkod, abonhamar));
-    else
+    QString columnName;
+    switch (index.column()) {
+    case 5:
+        columnName = "hashverc";
+        break;
+    case 6:
+        columnName = "meknab";
+        break;
+    default:
         return false;
+    }
+
+    QSqlQuery query;
+    query.prepare(QString("UPDATE cucak SET " + columnName + " = :value WHERE mkod = :mkod and abonhamar = :abonhamar "));
+
+    query.bindValue(":value", value);
+    query.bindValue(":mkod", m_mkod);
+    query.bindValue(":abonhamar", record(index.row()).value("abonhamar").toString());
+
     qDebug() << query.lastQuery();
     if (!query.exec()) {
         qWarning() << "Update failed:" << query.lastError().text();

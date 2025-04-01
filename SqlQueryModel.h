@@ -27,6 +27,7 @@ private:
     //QString m_filterText;
     //QString m_sortText;
     //QTimer* m_filterTimer;
+
 };
 
 #endif // SQLQUERYMODEL_H

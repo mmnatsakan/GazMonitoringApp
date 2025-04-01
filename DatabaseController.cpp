@@ -8,6 +8,7 @@
 #include <QFile>
 #include <QDir>
 #include <QStandardPaths>
+#include <QMessageBox>
 
 DatabaseController *DatabaseController::instance()
 {
@@ -21,8 +22,8 @@ DatabaseController *DatabaseController::instance()
 #ifdef ANDROID
 void DatabaseController::copyDatabaseIfNeeded() {
     QString writablePath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-    qDebug() << writablePath << "  0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
-    QString dbFilePath = writablePath + "/mydb.db";
+    QMessageBox::information(nullptr, "AAAAAAAAAAAA", writablePath);
+    QString dbFilePath = writablePath + "/Monitoring.sqlite";
 
     if (!QFile::exists(dbFilePath)) {
         QDir dir;
@@ -64,11 +65,11 @@ bool DatabaseController::openDatabase() {
 
 #endif
 
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName(dbFilePath);
+    m_db = QSqlDatabase::addDatabase("QSQLITE");
+    m_db.setDatabaseName(dbFilePath);
 
-    if (!db.open()) {
-        qWarning() << "Error opening database:" << db.lastError().text();
+    if (!m_db.open()) {
+        qWarning() << "Error opening database:" << m_db.lastError().text();
         return false;
     } else {
         qDebug() << "Database opened successfully.";

@@ -6,6 +6,7 @@
 #include <QScrollBar>
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QKeyEvent>
 
 MonitoringTableView::MonitoringTableView(QWidget *parent)
     : QTableView{parent}
@@ -75,5 +76,39 @@ QMap<QString, QString> MonitoringTableView::getInfo() const
     }
     qDebug() << infoMap;
     return infoMap;
+}
+
+void MonitoringTableView::clearCell(const QModelIndex &index)
+{
+    QString fieldName = m_model->headerData(index.column(), Qt::Horizontal).toString();
+
+    // Prepare SQL query
+    QSqlQuery query;
+    query.prepare(QString("UPDATE cucak SET %1 = NULL WHERE mkod = :mkod AND hskichkod = :hskichkod")
+                      .arg(fieldName));
+
+    query.bindValue(":mkod", m_mkod);
+    query.bindValue(":hskichkod", m_hskichkod);
+    qDebug() << query.lastQuery();
+
+    if (!query.exec()) {
+        qDebug() << "SQL Error:" << query.lastError().text();
+        return;
+    }
+
+    m_model->refresh();
+}
+
+void MonitoringTableView::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Delete) {
+        QModelIndex currentIndex = this->currentIndex();
+        if (currentIndex.isValid()) {
+            m_model->setData(currentIndex, QVariant(QVariant::String), Qt::EditRole);
+            //clearCell(currentIndex);
+        }
+    } else {
+        QTableView::keyPressEvent(event);
+    }
 }
 
