@@ -1,15 +1,19 @@
 <?xml version="1.0"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.GazpromArmenia.GazMonitoringApp">
+    package="com.MMV.Monitoring"
+    android:installLocation="auto">
 	
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-		
+	<uses-permission android:name="android.permission.READ_MEDIA_DOCUMENTS"/>
+
     <application
-        android:name="org.qtproject.qt.android.bindings.QtApplication"
-        android:label="GazMonitoringApp">
+        android:name="com.MMV.QtApplication"
+        android:hardwareAccelerated="true"
+        android:label="MonitoringApp"
+        android:requestLegacyExternalStorage="true">
 		
         <activity
-            android:name="org.qtproject.qt.android.bindings.QtActivity"
+            android:name="com.MMV.QtActivity"
             android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|layoutDirection|locale|fontScale|keyboard|keyboardHidden|navigation|mcc|mnc|density"
             android:screenOrientation="landscape"
 			android:exported="true">

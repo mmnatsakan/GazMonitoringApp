@@ -13,11 +13,6 @@ int main(int argc, char *argv[])
     appFont.setHintingPreference(QFont::HintingPreference::PreferNoHinting);
     QApplication::setFont(appFont);
 
-//#ifndef ANDROID
-    // Switch the code page to UTF-8
-    //system("chcp 65001");
-//#endif
-
     MainWindow w;
     //SearchAbonentWidget w;
     w.show();

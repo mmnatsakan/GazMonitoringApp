@@ -9,6 +9,12 @@
 #include <QDir>
 #include <QStandardPaths>
 #include <QMessageBox>
+#include <QApplication>
+
+#ifdef ANDROID
+#include <QJniObject>
+#include <QJniEnvironment>
+#endif
 
 DatabaseController *DatabaseController::instance()
 {
@@ -21,37 +27,64 @@ DatabaseController *DatabaseController::instance()
 
 #ifdef ANDROID
 void DatabaseController::copyDatabaseIfNeeded() {
-    QString writablePath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-    QMessageBox::information(nullptr, "AAAAAAAAAAAA", writablePath);
-    QString dbFilePath = writablePath + "/Monitoring.sqlite";
+    QMessageBox::information(nullptr, "0000000000000000000000000000", QStandardPaths::writableLocation(QStandardPaths::DownloadLocation));
 
-    if (!QFile::exists(dbFilePath)) {
-        QDir dir;
-        if (!dir.mkpath(writablePath)) {
-            qWarning() << "Failed to create directory:" << writablePath;
+    QString fileName = "Monitoring.sqlite";
+
+    QString documentsPath = QStandardPaths::writableLocation(QStandardPaths::DownloadLocation);
+    QString sourceFile = documentsPath + "/" + fileName;
+    QString appDataPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QDir dir;
+    QMessageBox::information(nullptr, "AAAAAAAAAAAAAAAA", appDataPath);
+
+    if (!dir.exists(appDataPath)) {
+        if (!dir.mkpath(appDataPath)) {
+            QMessageBox::information(nullptr, "Failed to create directory:", appDataPath);
+            qDebug() << "Failed to create directory:" << appDataPath;
             return;
         }
-
-        QFile resourceFile(":/databases/mydb.db");
-        if (!resourceFile.open(QIODevice::ReadOnly)) {
-            qWarning() << "Failed to open resource database file.";
-            return;
-        }
-
-        QFile newFile(dbFilePath);
-        if (!newFile.open(QIODevice::WriteOnly)) {
-            qWarning() << "Failed to open new database file for writing:" << dbFilePath;
-            return;
-        }
-
-        newFile.write(resourceFile.readAll());
-        newFile.close();
-        resourceFile.close();
-
-        qDebug() << "Database copied to:" << dbFilePath;
-    } else {
-        qDebug() << "Database already exists at:" << dbFilePath;
     }
+    QString destFile = appDataPath + "/" + fileName;
+
+    if (QFile::exists(destFile)) {
+        if (!QFile::remove(destFile)) {
+            QMessageBox::information(nullptr, "Failed to remove existing file:", destFile);
+            qDebug() << "Failed to remove existing file:" << destFile;
+            return;
+        }
+    }
+
+    if (QFile::copy(sourceFile, destFile)) {
+        QMessageBox::information(nullptr, "File successfully copied from", sourceFile);
+        qDebug() << "File successfully copied from" << sourceFile << "to" << destFile;
+    } else {
+        QMessageBox::information(nullptr, "Failed to copy file.", sourceFile + " *** " + destFile);
+        qDebug() << "Failed to copy file. Check if the source file exists and if permissions are granted.";
+        QApplication::quit();
+    }
+}
+
+void requestPermission(const QString &permissionStr, int requestCode = 1234)
+{
+    QJniObject activity = QJniObject::callStaticObjectMethod(
+        "org/qtproject/qt/android/QtNative",
+        "activity",
+        "()Landroid/app/Activity;"
+        );
+
+    QJniEnvironment env;
+    jobjectArray permissionsArray = env->NewObjectArray(1,
+                                                        env->FindClass("java/lang/String"),
+                                                        env->NewStringUTF(permissionStr.toUtf8().constData()));
+
+    QJniObject::callStaticMethod<void>(
+        "androidx/core/app/ActivityCompat",
+        "requestPermissions",
+        "(Landroid/app/Activity;[Ljava/lang/String;I)V",
+        activity.object(),
+        permissionsArray,
+        requestCode
+        );
 }
 #endif
 
@@ -69,9 +102,11 @@ bool DatabaseController::openDatabase() {
     m_db.setDatabaseName(dbFilePath);
 
     if (!m_db.open()) {
+        QMessageBox::information(nullptr, "Error opening database:", m_db.lastError().text());
         qWarning() << "Error opening database:" << m_db.lastError().text();
         return false;
     } else {
+        QMessageBox::information(nullptr, "Database opened successfully.", dbFilePath);
         qDebug() << "Database opened successfully.";
         return true;
     }
@@ -91,6 +126,7 @@ QStringList DatabaseController::getTtList()
     query.prepare(QString("SELECT %1 || '_' || %2 as name FROM %3").arg("kod", "anun", "Tt"));
 
     if (!query.exec()) {
+        QMessageBox::information(nullptr, "Query execution failed:", query.lastError().text());
         qWarning() << "Query execution failed:" << query.lastError().text();
         return dataList;
     }
@@ -98,6 +134,7 @@ QStringList DatabaseController::getTtList()
     while (query.next()) {
         dataList << query.value(0).toString();
     }
+    QMessageBox::information(nullptr, "Query execution!:", "OKOKOKOKOKOKOKOKOK");
 
     return dataList;
 }
@@ -111,6 +148,7 @@ QStringList DatabaseController::getHskichList(const QString &mkod)
                           " where a.mkod = %5").arg("kod", "anun", "Hskich", "cucak", mkod));
 
     if (!query.exec()) {
+        QMessageBox::information(nullptr, "HSKICH Query execution failed:", query.lastError().text());
         qWarning() << "Query execution failed:" << query.lastError().text();
         return dataList;
     }
@@ -118,6 +156,7 @@ QStringList DatabaseController::getHskichList(const QString &mkod)
     while (query.next()) {
         dataList << query.value(0).toString();
     }
+    QMessageBox::information(nullptr, "HSKICH Query execution!:", "OKOKOKOKOKOKOKOKOK");
 
     return dataList;
 }
