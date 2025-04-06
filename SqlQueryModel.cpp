@@ -1,4 +1,5 @@
 #include "SqlQueryModel.h"
+#include "Constants.h"
 
 #include <QSqlQuery>
 #include <QSqlError>
@@ -7,21 +8,17 @@
 
 #define FILTER_DELAY_TIME 300
 
-SqlQueryModel::SqlQueryModel(QSqlQueryModel* parent)
+SqlQueryModel::SqlQueryModel(QObject* parent)
     :QSqlQueryModel(parent)
 {
-    // m_filterTimer = new QTimer(this);
-    // m_filterTimer->setSingleShot(true);
-    // connect(m_filterTimer, &QTimer::timeout, this, &SqlQueryModel::refresh);
+
 }
 
 void SqlQueryModel::refresh() {
-    // if(m_filterTimer->isActive())
-    //     m_filterTimer->stop();
 
     QSqlQuery query(QSqlDatabase::database());
 
-    QString finalQueryString = m_baseQuery; //+ m_filterText + m_sortText;
+    QString finalQueryString = m_baseQuery;
     qDebug() << finalQueryString;
     if (!query.exec(finalQueryString)) {
         qWarning() << "Query execution failed:" << query.lastError();
@@ -34,44 +31,10 @@ void SqlQueryModel::refresh() {
 }
 
 Qt::ItemFlags SqlQueryModel::flags(const QModelIndex &index) const {
-    Qt::ItemFlags flags = QSqlQueryModel::flags(index);
-    if (index.column() == 5 || index.column() == 6)
-        flags |= Qt::ItemIsEditable;
-    return flags;
-}
-/*
-void SqlQueryModel::setFilter(const QString &filterText)
-{
-    if (m_filterText == filterText)
-        return;
-
-    m_filterText = filterText.isEmpty() ? "" : " WHERE (:filterText) ";
-    m_filterTimer->start(FILTER_DELAY_TIME);
-}
-
-void SqlQueryModel::setSort(const QString &sortText)
-{
-    if (m_sortText == sortText)
-        return;
-
-    m_sortText = sortText.isEmpty() ? "" : " ORDER BY (:sortText) ";
-}
-*/
-QVariant SqlQueryModel::data(const QModelIndex &index, int role) const
-{
-    // if (role == Qt::DisplayRole) {
-    //     QVariant value = QSqlQueryModel::data(index, role);
-
-    //     if (value.userType() == QMetaType::Int || value.userType() == QMetaType::Double) {
-    //         if (value.toDouble() == 0) {
-    //             return QVariant();
-    //         }
-    //     }
-    //     else if (value.userType() == QMetaType::QString && value.toString() == "0") {
-    //         return QVariant();
-    //     }
-    // }
-    return QSqlQueryModel::data(index, role);
+    Qt::ItemFlags defaultFlags = QSqlQueryModel::flags(index);
+    if (index.column() == HASHVERC_COLUMN_INDEX)
+        return defaultFlags | Qt::ItemIsEditable | Qt::ItemIsSelectable;
+    return defaultFlags & ~(Qt::ItemIsEditable | Qt::ItemIsSelectable);
 }
 
 bool SqlQueryModel::setData(const QModelIndex &index, const QVariant &value, int role) {
@@ -83,35 +46,14 @@ bool SqlQueryModel::setData(const QModelIndex &index, const QVariant &value, int
     return true;
 }
 
-bool SqlQueryModel::updateDatabaseTable(const QModelIndex &index, const QVariant &value)
-{
-    Q_UNUSED(index);
-    Q_UNUSED(value);
-    // QString abonhamar = record(index.row()).value("abonhamar").toString();
-    // QSqlQuery query;
-    // if(index.column() == 6){
-    // query.prepare(QString("UPDATE cucBlank SET hashverc = %1, hashxm = %2 WHERE mkod = %3 and abonhamar = %4 ").arg(value.toString(), calculateHashxm(index, value), m_mkod, abonhamar));
-    // }
-    // else if(index.column() == 9)
-    // query.prepare(QString("UPDATE cucBlank SET meknab = %1, WHERE mkod = %2 and abonhamar = %3 ").arg(value.toString(), m_mkod, abonhamar));
-    // else
-    // return false;
-    // qDebug() << query.lastQuery();
-    // if (!query.exec()) {
-    // qWarning() << "Update failed:" << query.lastError().text();
-    // return false;
-    // }
-    return true;
-}
-
 bool SqlQueryModel::updateMonitoringTable(const QModelIndex &index, const QVariant &value)
 {
     QString columnName;
     switch (index.column()) {
-    case 5:
+    case HASHVERC_COLUMN_INDEX:
         columnName = "hashverc";
         break;
-    case 6:
+    case MEKNAB_COLUMN_INDEX:
         columnName = "meknab";
         break;
     default:
@@ -133,38 +75,11 @@ bool SqlQueryModel::updateMonitoringTable(const QModelIndex &index, const QVaria
     return true;
 }
 
-QString SqlQueryModel::calculateHashxm(const QModelIndex &index, const QVariant &value)
-{
-    if(value.toString().isEmpty())
-        return "NULL";
-    double hashnaxc = record(index.row()).value("hashnaxc").toDouble();
-    double hashxm = value.toDouble() - hashnaxc;
-    if(hashxm >= 0)
-        return QString::number(hashxm);
-
-    int astichan1 = 0;
-
-    QSqlQuery query;
-    query.prepare(QString("SELECT b.dovlenie FROM cucBlank a"
-                          " LEFT JOIN hashvich b ON a.mkod = b.mkod and a.hashtipkod = b.kod"
-                          " WHERE a.mkod = '%1' and a.abonhamar = '%2'").arg(m_mkod, record(index.row()).value("abonhamar").toString()));
-    qDebug() << query.lastQuery();
-    query.exec();
-    if (query.next())
-        astichan1 = query.value(0).toInt();
-    if(astichan1 == 0)
-        astichan1 = (int)std::log10(hashnaxc) + 1;
-    hashxm += pow(10, astichan1);
-    return QString::number(hashxm);
-}
-
 void SqlQueryModel::setBaseQuery(const QString &query, const QString &mkod)
 {
     m_mkod = mkod;
     if(m_baseQuery == query)
         return;
-    // m_filterText = "";
-    // m_sortText = "";
     m_baseQuery = query;
     refresh();
 }

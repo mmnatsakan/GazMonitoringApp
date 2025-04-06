@@ -1,6 +1,6 @@
 #include "CucBlankTableView.h"
 #include "SqlQueryModel.h"
-#include <UIStyle.h>
+#include "UIStyle.h"
 
 #include <QHeaderView>
 #include <QScrollBar>

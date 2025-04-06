@@ -9,6 +9,7 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    CheckListTextEditor.cpp \
     CucBlankPage.cpp \
     CucBlankTableView.cpp \
     DatabaseController.cpp \
@@ -23,6 +24,8 @@ SOURCES += \
     main.cpp
 
 HEADERS += \
+    CheckListTextEditor.h \
+    Constants.h \
     CucBlankPage.h \
     CucBlankTableView.h \
     DatabaseController.h \
@@ -41,16 +44,6 @@ HEADERS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
-
-#android {
-    #ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
-    #ANDROID_APP_NAME = "Gaz_Malatya"
-    #TARGET = Gaz_Malatya
-    #QT_ANDROID_PACKAGE_NAME = com.MMV.Gaz_Malatya
-    #DISTFILES += mydatabase.db
-
-#}
-
 
 RESOURCES += \
     Resources.qrc

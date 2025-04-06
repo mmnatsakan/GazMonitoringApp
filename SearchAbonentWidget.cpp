@@ -101,7 +101,7 @@ void SearchAbonentWidget::makeConnections()
 
 void SearchAbonentWidget::onSearchButtonClickedSlot()
 {
-    m_detailsWidget->updateData(m_searchLineEdit->text(), m_abonhamarRadioButton->isChecked());
+    //m_detailsWidget->updateData(m_searchLineEdit->text(), m_abonhamarRadioButton->isChecked());
     updateUI();
 }
 

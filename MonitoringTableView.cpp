@@ -1,17 +1,21 @@
 #include "MonitoringTableView.h"
 #include "SqlQueryModel.h"
-#include <UIStyle.h>
+#include "UIStyle.h"
+#include "Constants.h"
+#include "CheckListTextEditor.h"
+#include "DetailsWidget.h"
 
 #include <QHeaderView>
 #include <QScrollBar>
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QKeyEvent>
+#include <QMouseEvent>
 
 MonitoringTableView::MonitoringTableView(QWidget *parent)
     : QTableView{parent}
 {
-    m_model = new SqlQueryModel();
+    m_model = new SqlQueryModel(this);
 
     setMouseTracking(true);
     setWordWrap(true);
@@ -74,29 +78,7 @@ QMap<QString, QString> MonitoringTableView::getInfo() const
         infoMap["filledCount"] = QString::number(countQuery.value(0).toInt());
         infoMap["totalCount"] =  QString::number(countQuery.value(1).toInt());
     }
-    qDebug() << infoMap;
     return infoMap;
-}
-
-void MonitoringTableView::clearCell(const QModelIndex &index)
-{
-    QString fieldName = m_model->headerData(index.column(), Qt::Horizontal).toString();
-
-    // Prepare SQL query
-    QSqlQuery query;
-    query.prepare(QString("UPDATE cucak SET %1 = NULL WHERE mkod = :mkod AND hskichkod = :hskichkod")
-                      .arg(fieldName));
-
-    query.bindValue(":mkod", m_mkod);
-    query.bindValue(":hskichkod", m_hskichkod);
-    qDebug() << query.lastQuery();
-
-    if (!query.exec()) {
-        qDebug() << "SQL Error:" << query.lastError().text();
-        return;
-    }
-
-    m_model->refresh();
 }
 
 void MonitoringTableView::keyPressEvent(QKeyEvent *event)
@@ -105,10 +87,60 @@ void MonitoringTableView::keyPressEvent(QKeyEvent *event)
         QModelIndex currentIndex = this->currentIndex();
         if (currentIndex.isValid()) {
             m_model->setData(currentIndex, QVariant(QVariant::String), Qt::EditRole);
-            //clearCell(currentIndex);
         }
     } else {
         QTableView::keyPressEvent(event);
     }
+}
+
+void MonitoringTableView::mouseReleaseEvent(QMouseEvent *event)
+{
+    QModelIndex clickedIndex = indexAt(event->pos());
+    if (clickedIndex.isValid()) {
+        if(clickedIndex.column() == MEKNAB_COLUMN_INDEX){
+            CheckListTextEditor* dlg = new CheckListTextEditor(nullptr);
+            dlg->setData(m_model->data(clickedIndex).toString());
+            if(dlg->exec() == QDialog::Accepted)
+                m_model->setData(clickedIndex, dlg->getData(), Qt::EditRole);
+            dlg->deleteLater();
+            return;
+        }
+        if(clickedIndex.column() == 0){
+            DetailsWidget* dlg = new DetailsWidget(nullptr);
+            dlg->setWindowModality(Qt::ApplicationModal);
+            int row = clickedIndex.row();
+            MainData mainData;
+            mainData.abonhamar = m_model->data(m_model->index(row, ABONHAMAR_COLUMN_INDEX), Qt::DisplayRole).toString();
+            mainData.aah = m_model->data(m_model->index(row, AAH_COLUMN_INDEX), Qt::DisplayRole).toString();
+            mainData.hasce = m_model->data(m_model->index(row, HASCE_COLUMN_INDEX), Qt::DisplayRole).toString();
+            mainData.hashvichn = m_model->data(m_model->index(row, HASHVICHN_COLUMN_INDEX), Qt::DisplayRole).toString();
+            mainData.hashnaxc = m_model->data(m_model->index(row, HASHNAXC_COLUMN_INDEX), Qt::DisplayRole).toString();
+            AmisData amisData;
+            QStringList gazList = m_model->data(m_model->index(row, HASHXMNER_COLUMN_INDEX), Qt::DisplayRole).toString().split(";");
+            QStringList kniqList = m_model->data(m_model->index(row, KNIQNER_COLUMN_INDEX), Qt::DisplayRole).toString().split(";");
+            for(int i = 0; i < gazList.count() - 1; ++i){
+                if(!gazList.at(i).isEmpty()){
+                    QStringList gazQanakData = gazList.at(i).split("_");
+                    amisData.taram = gazQanakData.at(0);
+                    amisData.hashxm = gazQanakData.at(1);
+                    amisData.xaxthash = gazQanakData.at(2);
+                }
+                if(i < kniqList.count() && !kniqList.at(i).isEmpty()){
+                    QStringList kniqData = kniqList.at(i).split("_");
+                    amisData.hashvichn = kniqData.at(1);
+                    amisData.kniqner = kniqData.at(2);
+                }
+                mainData.tableDataList << amisData;
+            }
+            dlg->updateData(mainData);
+            dlg->show();
+            return;
+        }
+        clickedIndex = model()->index(clickedIndex.row(), HASHVERC_COLUMN_INDEX);
+        selectionModel()->clearSelection();
+        selectionModel()->select(clickedIndex, QItemSelectionModel::Select | QItemSelectionModel::Current);
+        setCurrentIndex(clickedIndex);
+    }
+    QTableView::mousePressEvent(event);
 }
 

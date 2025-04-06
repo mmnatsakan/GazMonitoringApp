@@ -28,14 +28,10 @@ protected:
 signals:
     void dataUpdated(const QModelIndex &topLeft, const QModelIndex &bottomRight,
                      const QList<int> &roles = QList<int>());
-};
 
-inline const QStringList MONITORING_HEADERS_LIST = {
-    "Բաժ.\nհամարը", "Ազգանուն Անունը", "Հասցեն", "Հաշվիչի\nհամարը", "Նախկին\nցուցմունքը", "Առկա\nցուցմունքը", "Մեկնաբա-\nնություն"
+    // QWidget interface
+protected:
+    void mouseReleaseEvent(QMouseEvent *event);
 };
-
-inline const QString MONITORING_MODEL_BASE_QUERY = "SELECT abonhamar, TRIM(aah) AS aah, TRIM(hasce) AS hasce, TRIM(hashvichn) AS hashvichn, "
-                                        "hashnaxc, hashverc, meknab "
-                                        "FROM cucak ";
 
 #endif // MONITORINGTABLEVIEW_H

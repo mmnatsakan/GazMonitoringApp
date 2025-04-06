@@ -12,8 +12,8 @@
 #include <QApplication>
 
 #ifdef ANDROID
-#include <QJniObject>
-#include <QJniEnvironment>
+    #include <QJniObject>
+    #include <QJniEnvironment>
 #endif
 
 DatabaseController *DatabaseController::instance()
@@ -66,6 +66,8 @@ void DatabaseController::copyDatabaseIfNeeded() {
 
 void requestPermission(const QString &permissionStr, int requestCode = 1234)
 {
+    QMessageBox::information(nullptr, "File succes000000000000000000sfully copied from", "sourceFile");
+
     QJniObject activity = QJniObject::callStaticObjectMethod(
         "org/qtproject/qt/android/QtNative",
         "activity",
@@ -106,7 +108,7 @@ bool DatabaseController::openDatabase() {
         qWarning() << "Error opening database:" << m_db.lastError().text();
         return false;
     } else {
-        QMessageBox::information(nullptr, "Database opened successfully.", dbFilePath);
+        //QMessageBox::information(nullptr, "Database opened successfully.", dbFilePath);
         qDebug() << "Database opened successfully.";
         return true;
     }
@@ -134,7 +136,7 @@ QStringList DatabaseController::getTtList()
     while (query.next()) {
         dataList << query.value(0).toString();
     }
-    QMessageBox::information(nullptr, "Query execution!:", "OKOKOKOKOKOKOKOKOK");
+    //QMessageBox::information(nullptr, "Query execution!:", "OKOKOKOKOKOKOKOKOK");
 
     return dataList;
 }
@@ -156,7 +158,7 @@ QStringList DatabaseController::getHskichList(const QString &mkod)
     while (query.next()) {
         dataList << query.value(0).toString();
     }
-    QMessageBox::information(nullptr, "HSKICH Query execution!:", "OKOKOKOKOKOKOKOKOK");
+    //QMessageBox::information(nullptr, "HSKICH Query execution!:", "OKOKOKOKOKOKOKOKOK");
 
     return dataList;
 }
