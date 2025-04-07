@@ -10,15 +10,11 @@ CONFIG += c++17
 
 SOURCES += \
     CheckListTextEditor.cpp \
-    CucBlankPage.cpp \
-    CucBlankTableView.cpp \
     DatabaseController.cpp \
     DetailsWidget.cpp \
-    JsonParser.cpp \
     MainWindow.cpp \
     MonitoringPage.cpp \
     MonitoringTableView.cpp \
-    SearchAbonentWidget.cpp \
     SqlQueryModel.cpp \
     StartPage.cpp \
     main.cpp
@@ -26,16 +22,12 @@ SOURCES += \
 HEADERS += \
     CheckListTextEditor.h \
     Constants.h \
-    CucBlankPage.h \
-    CucBlankTableView.h \
     DatabaseController.h \
     DetailsWidget.h \
     Json/Json.h \
-    JsonParser.h \
     MainWindow.h \
     MonitoringPage.h \
     MonitoringTableView.h \
-    SearchAbonentWidget.h \
     SqlQueryModel.h \
     StartPage.h \
     UIStyle.h

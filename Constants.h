@@ -12,7 +12,7 @@ const QStringList MEKNAB_LIST {
 };
 
 const QString MONITORING_MODEL_BASE_QUERY = "SELECT abonhamar, TRIM(aah) AS aah, TRIM(hasce) AS hasce, TRIM(hashvichn) AS hashvichn, "
-                                            "hashnaxc, hashverc, meknab, kniqner, hashxmner "
+                                            "hashnaxc, hashverc, meknab, hashxmner, kniqner "
                                             "FROM cucak ";
 
 const int ABONHAMAR_COLUMN_INDEX = 0;

@@ -1,5 +1,5 @@
 #include "DetailsWidget.h"
-#include "JsonParser.h"
+#include "UIStyle.h"
 
 #include <QLabel>
 #include <QTableWidget>
@@ -11,12 +11,14 @@
 #include <QDebug>
 
 
-DetailsWidget::DetailsWidget(QWidget *parent)
-    : QWidget(parent)
+DetailsWidget::DetailsWidget(const MainData &mainData, QWidget *parent)
+    : QDialog(parent)
 {
+    setMinimumWidth(700);
     createMembers();
     installStyleSheets();
     setupLayout();
+    updateData(mainData);
 }
 
 void DetailsWidget::updateData(const MainData& mainData)
@@ -41,9 +43,12 @@ void DetailsWidget::updateData(const MainData& mainData)
             QTableWidgetItem *item2 = new QTableWidgetItem(amisData.xaxthash);
             item2->setFlags(item2->flags() & ~(Qt::ItemIsSelectable | Qt::ItemIsEnabled));
             m_tableWidget->setItem(row, 2, item2);
-            QTableWidgetItem *item3 = new QTableWidgetItem(amisData.hashvichn + "\n" + amisData.kniqner);
+            QTableWidgetItem *item3 = new QTableWidgetItem(amisData.hashvichn);
             item3->setFlags(item3->flags() & ~(Qt::ItemIsSelectable | Qt::ItemIsEnabled));
             m_tableWidget->setItem(row, 3, item3);
+            QTableWidgetItem *item4 = new QTableWidgetItem(amisData.kniqner);
+            item3->setFlags(item4->flags() & ~(Qt::ItemIsSelectable | Qt::ItemIsEnabled));
+            m_tableWidget->setItem(row, 4, item4);
         }
         m_tableWidget->setUpdatesEnabled(true);
 }
@@ -55,8 +60,8 @@ void DetailsWidget::createMembers()
     m_customerLabel->setWordWrap(true);
 
     m_tableWidget = new QTableWidget(m_mainWidget);
-    m_tableWidget->setColumnCount(4);
-    m_tableWidget->setHorizontalHeaderLabels({"Տարամ", "գազ", "Խախտ", "Հաշվիչ\nԿնիքներ"});
+    m_tableWidget->setColumnCount(5);
+    m_tableWidget->setHorizontalHeaderLabels({ "Տարամ", "գազ", "Խախտ", "Հաշվիչ", "Կնիքներ" });
     m_tableWidget->verticalHeader()->setVisible(false);
     m_tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     m_tableWidget->horizontalHeader()->setStretchLastSection(true);
@@ -70,25 +75,15 @@ void DetailsWidget::createMembers()
 
 void DetailsWidget::installStyleSheets()
 {
-    const QString buttonStyle =
-        "QPushButton {"
-        "    border: none; "
-        "    outline: none; "
-        "    color: #000000; "
-        "    font-size: 14px; "
-        "    font-family: Arial; "
-        "    font-weight: 600; "
-        "    background: transparent; "
-        "    border-radius: 5px; "
-        "    padding: 7px 20px;"
-        "}";
+    m_customerLabel->setStyleSheet(LABEL_STYLE_SHEET);
+    m_tableWidget->setStyleSheet(TABLE_WIDGET_STYLE_SHEET);
 }
 
 void DetailsWidget::setupLayout()
 {
     QVBoxLayout* mainWidgetLayout = new QVBoxLayout();
-    mainWidgetLayout->setSpacing(0);
-    mainWidgetLayout->setContentsMargins(0, 0, 0, 10);
+    mainWidgetLayout->setSpacing(20);
+    mainWidgetLayout->setContentsMargins(10, 10, 10, 10);
     mainWidgetLayout->addWidget(m_customerLabel);
     mainWidgetLayout->addWidget(m_tableWidget);
     m_mainWidget->setLayout(mainWidgetLayout);

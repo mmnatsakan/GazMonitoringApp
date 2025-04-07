@@ -25,9 +25,9 @@ const QString RADIO_BUTTON_STYLE_SHEET = "QRadioButton::indicator{width: 15px; h
                                         "QRadioButton::indicator::unchecked{image: url(':/icon_radiobutton_unchecked.svg');}"\
                                         "QRadioButton{color: #000000; font-size: 14px; font-family: Arial;}";
 
-const QString TABLE_WIDGET_STYLE_SHEET =    "QTableWidget, QTableWidget:disabled {gridline-color: black; background-color: white; alternate-background-color: #f2f2f2; font-size: 14px; font-weight: 400}"\
-                                            "QHeaderView::section {background-color: lightgray; padding: 5px; border: 1px solid black; font-size: 14px; font-weight: 600;}"\
-                                            "QTableWidget::item {border: 1px solid black; padding: 5px;}";
+const QString TABLE_WIDGET_STYLE_SHEET =    "QTableWidget, QTableWidget:disabled {gridline-color: gray; background-color: white; alternate-background-color: #f2f2f2; font-size: 14px; font-weight: 400}"\
+                                            "QHeaderView::section {background-color: lightgray; padding: 5px; border: 1px solid gray; font-size: 14px; font-weight: 600;}"\
+                                            "QTableWidget::item {border: 1px solid gray; padding: 5px;}";
 
 const QString COMBOBOX_STYLE_SHEET =    "QComboBox {height: 18px; background-color: #ffffff; color: #000000; border-radius: 2px; font-size: 18px; font-weight: 600; padding-top: 10px; padding-bottom: 10px; padding-left: 5px;}"\
                                         "QComboBox:on{background-color: lightBlue;}"\

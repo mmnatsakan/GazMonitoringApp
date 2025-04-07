@@ -1,12 +1,13 @@
 #include "MainWindow.h"
-#include "SearchAbonentWidget.h"
 
 #include <QApplication>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-
+#ifdef ANDROID
+    QGuiApplication::setHighDpiScaleFactorRoundingPolicy(Qt::HighDpiScaleFactorRoundingPolicy::PassThrough);
+#endif
     QFont appFont = QApplication::font();
     appFont.setFamily("Arial");
     appFont.setStyleStrategy(QFont::PreferAntialias);
@@ -14,7 +15,6 @@ int main(int argc, char *argv[])
     QApplication::setFont(appFont);
 
     MainWindow w;
-    //SearchAbonentWidget w;
     w.show();
     return a.exec();
 }

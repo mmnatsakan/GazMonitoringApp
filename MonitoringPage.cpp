@@ -11,7 +11,7 @@ MonitoringPage::MonitoringPage(QWidget *parent)
     : QWidget{parent}
     , m_maxSparum(1000)
 {
-    //setFixedSize(1200, 800);
+    //setMinimumSize(1200, 800);
 
     createMembers();
     installStyleSheets();

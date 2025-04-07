@@ -17,6 +17,7 @@ public:
 
 private:
     void clearCell(const QModelIndex &index);
+    void showDetailsWidget(int row);
     SqlQueryModel* m_model;
 
     QString m_mkod;

@@ -10,10 +10,12 @@
 CheckListTextEditor::CheckListTextEditor(QWidget *parent)
     : QDialog{parent}
 {
+    setMinimumWidth(500);
     createMembers();
     installStyleSheets();
     setupLayout();
     makeConnections();
+    setAttribute(Qt::WA_AcceptTouchEvents);
 }
 
 void CheckListTextEditor::createMembers()
@@ -22,6 +24,11 @@ void CheckListTextEditor::createMembers()
     for (const QString& meknab : MEKNAB_LIST) {
         QCheckBox* checkBox = new QCheckBox(meknab, m_mainWidget);
         m_checkBoxes.append(checkBox);
+        connect(checkBox, &QCheckBox::checkStateChanged, this,[=](){
+            qDebug() << checkBox->checkState() << " 000000000000000000000000000000000000";
+            update();
+            repaint();
+        });
     }
     m_textEdit = new QTextEdit(m_mainWidget);
     m_textEdit->setPlaceholderText("Մուտքագրել տեքստ...");
@@ -56,7 +63,7 @@ void CheckListTextEditor::setupLayout()
     mainLayout->addLayout(checkBoxesLayout);
     mainLayout->addWidget(m_textEdit);
     mainLayout->addLayout(buttonsLayout);
-    setLayout(mainLayout);
+    m_mainWidget->setLayout(mainLayout);
 
     QVBoxLayout* thisLayout = new QVBoxLayout();
     thisLayout->setContentsMargins(0, 0, 0, 0);
@@ -71,11 +78,21 @@ void CheckListTextEditor::makeConnections()
     connect(m_acceptButton, &QPushButton::clicked, this, &QDialog::accept);
     connect(m_cancelButton, &QPushButton::clicked, this, &QDialog::reject);
 }
+#include <QMouseEvent>
+#include <QMessageBox>
+void CheckListTextEditor::mousePressEvent(QMouseEvent *event)
+{
+    qDebug() << m_checkBoxes[3]->pos();
+    QMessageBox::information(nullptr, "CheckListTextEditor::mousePressEvent", "( " + QString::number(event->pos().x()) + ", " + QString::number(event->pos().y()) + " )");
+    QDialog::mousePressEvent(event);
+}
 
 void CheckListTextEditor::setData(const QString &data)
 {
     for(auto& checkBox : m_checkBoxes) {
         checkBox->setChecked(data.contains(checkBox->text()));
+        checkBox->update();
+        checkBox->repaint();
     }
     m_textEdit->setText(data.mid(data.indexOf("\n") + 1));
 }

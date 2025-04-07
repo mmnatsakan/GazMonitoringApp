@@ -27,7 +27,7 @@ DatabaseController *DatabaseController::instance()
 
 #ifdef ANDROID
 void DatabaseController::copyDatabaseIfNeeded() {
-    QMessageBox::information(nullptr, "0000000000000000000000000000", QStandardPaths::writableLocation(QStandardPaths::DownloadLocation));
+    //QMessageBox::information(nullptr, "0000000000000000000000000000", QStandardPaths::writableLocation(QStandardPaths::DownloadLocation));
 
     QString fileName = "Monitoring.sqlite";
 
@@ -35,7 +35,7 @@ void DatabaseController::copyDatabaseIfNeeded() {
     QString sourceFile = documentsPath + "/" + fileName;
     QString appDataPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     QDir dir;
-    QMessageBox::information(nullptr, "AAAAAAAAAAAAAAAA", appDataPath);
+    //QMessageBox::information(nullptr, "AAAAAAAAAAAAAAAA", appDataPath);
 
     if (!dir.exists(appDataPath)) {
         if (!dir.mkpath(appDataPath)) {
@@ -55,7 +55,7 @@ void DatabaseController::copyDatabaseIfNeeded() {
     }
 
     if (QFile::copy(sourceFile, destFile)) {
-        QMessageBox::information(nullptr, "File successfully copied from", sourceFile);
+        //QMessageBox::information(nullptr, "File successfully copied from", sourceFile);
         qDebug() << "File successfully copied from" << sourceFile << "to" << destFile;
     } else {
         QMessageBox::information(nullptr, "Failed to copy file.", sourceFile + " *** " + destFile);
@@ -104,7 +104,7 @@ bool DatabaseController::openDatabase() {
     m_db.setDatabaseName(dbFilePath);
 
     if (!m_db.open()) {
-        QMessageBox::information(nullptr, "Error opening database:", m_db.lastError().text());
+        //QMessageBox::information(nullptr, "Error opening database:", m_db.lastError().text());
         qWarning() << "Error opening database:" << m_db.lastError().text();
         return false;
     } else {

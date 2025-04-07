@@ -17,7 +17,7 @@ MonitoringTableView::MonitoringTableView(QWidget *parent)
 {
     m_model = new SqlQueryModel(this);
 
-    setMouseTracking(true);
+    //setMouseTracking(true);
     setWordWrap(true);
 
     horizontalHeader()->setFixedHeight(50);
@@ -29,8 +29,8 @@ MonitoringTableView::MonitoringTableView(QWidget *parent)
     horizontalHeader()->setStretchLastSection(true);
     setSelectionBehavior(QTableView::SelectRows);
 
-    verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-    verticalHeader()->setDefaultSectionSize(150);
+    verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+    verticalHeader()->setDefaultSectionSize(50);
 
     verticalScrollBar()->setStyleSheet(SCROLLBAR_STYLE_SHEET);
     horizontalScrollBar()->setStyleSheet(SCROLLBAR_STYLE_SHEET);
@@ -61,6 +61,8 @@ void MonitoringTableView::updateUiData(const QString& mkod, const QString& hskic
 
     setColumnWidth(1, 200);
     setColumnWidth(2, 200);
+    hideColumn(KNIQNER_COLUMN_INDEX);
+    hideColumn(HASHXMNER_COLUMN_INDEX);
 }
 
 QMap<QString, QString> MonitoringTableView::getInfo() const
@@ -79,6 +81,36 @@ QMap<QString, QString> MonitoringTableView::getInfo() const
         infoMap["totalCount"] =  QString::number(countQuery.value(1).toInt());
     }
     return infoMap;
+}
+
+void MonitoringTableView::showDetailsWidget(int row)
+{
+    MainData mainData;
+    mainData.abonhamar = m_model->data(m_model->index(row, ABONHAMAR_COLUMN_INDEX), Qt::DisplayRole).toString();
+    mainData.aah = m_model->data(m_model->index(row, AAH_COLUMN_INDEX), Qt::DisplayRole).toString();
+    mainData.hasce = m_model->data(m_model->index(row, HASCE_COLUMN_INDEX), Qt::DisplayRole).toString();
+    mainData.hashvichn = m_model->data(m_model->index(row, HASHVICHN_COLUMN_INDEX), Qt::DisplayRole).toString();
+    mainData.hashnaxc = m_model->data(m_model->index(row, HASHNAXC_COLUMN_INDEX), Qt::DisplayRole).toString();
+    AmisData amisData;
+    QStringList gazList = m_model->data(m_model->index(row, HASHXMNER_COLUMN_INDEX), Qt::DisplayRole).toString().split(";");
+    QStringList kniqList = m_model->data(m_model->index(row, KNIQNER_COLUMN_INDEX), Qt::DisplayRole).toString().split(";");
+    for(int i = 0; i < gazList.count() - 1; ++i){
+        if(!gazList.at(i).isEmpty()){
+            QStringList gazQanakData = gazList.at(i).split("_");
+            amisData.taram = gazQanakData.at(0);
+            amisData.hashxm = gazQanakData.at(1);
+            amisData.xaxthash = gazQanakData.at(2);
+        }
+        if(i < kniqList.count() && !kniqList.at(i).isEmpty()){
+            QStringList kniqData = kniqList.at(i).split("_");
+            amisData.hashvichn = kniqData.at(1);
+            amisData.kniqner = kniqData.at(2);
+        }
+        mainData.tableDataList << amisData;
+    }
+    DetailsWidget* dlg = new DetailsWidget(mainData, nullptr);
+    dlg->setWindowFlags(Qt::Popup);
+    dlg->show();
 }
 
 void MonitoringTableView::keyPressEvent(QKeyEvent *event)
@@ -106,34 +138,7 @@ void MonitoringTableView::mouseReleaseEvent(QMouseEvent *event)
             return;
         }
         if(clickedIndex.column() == 0){
-            DetailsWidget* dlg = new DetailsWidget(nullptr);
-            dlg->setWindowModality(Qt::ApplicationModal);
-            int row = clickedIndex.row();
-            MainData mainData;
-            mainData.abonhamar = m_model->data(m_model->index(row, ABONHAMAR_COLUMN_INDEX), Qt::DisplayRole).toString();
-            mainData.aah = m_model->data(m_model->index(row, AAH_COLUMN_INDEX), Qt::DisplayRole).toString();
-            mainData.hasce = m_model->data(m_model->index(row, HASCE_COLUMN_INDEX), Qt::DisplayRole).toString();
-            mainData.hashvichn = m_model->data(m_model->index(row, HASHVICHN_COLUMN_INDEX), Qt::DisplayRole).toString();
-            mainData.hashnaxc = m_model->data(m_model->index(row, HASHNAXC_COLUMN_INDEX), Qt::DisplayRole).toString();
-            AmisData amisData;
-            QStringList gazList = m_model->data(m_model->index(row, HASHXMNER_COLUMN_INDEX), Qt::DisplayRole).toString().split(";");
-            QStringList kniqList = m_model->data(m_model->index(row, KNIQNER_COLUMN_INDEX), Qt::DisplayRole).toString().split(";");
-            for(int i = 0; i < gazList.count() - 1; ++i){
-                if(!gazList.at(i).isEmpty()){
-                    QStringList gazQanakData = gazList.at(i).split("_");
-                    amisData.taram = gazQanakData.at(0);
-                    amisData.hashxm = gazQanakData.at(1);
-                    amisData.xaxthash = gazQanakData.at(2);
-                }
-                if(i < kniqList.count() && !kniqList.at(i).isEmpty()){
-                    QStringList kniqData = kniqList.at(i).split("_");
-                    amisData.hashvichn = kniqData.at(1);
-                    amisData.kniqner = kniqData.at(2);
-                }
-                mainData.tableDataList << amisData;
-            }
-            dlg->updateData(mainData);
-            dlg->show();
+            showDetailsWidget(clickedIndex.row());
             return;
         }
         clickedIndex = model()->index(clickedIndex.row(), HASHVERC_COLUMN_INDEX);
