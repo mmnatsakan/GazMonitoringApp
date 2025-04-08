@@ -4,6 +4,7 @@
 #include "Constants.h"
 #include "CheckListTextEditor.h"
 #include "DetailsWidget.h"
+#include "NumericDelegate.h"
 
 #include <QHeaderView>
 #include <QScrollBar>
@@ -17,16 +18,16 @@ MonitoringTableView::MonitoringTableView(QWidget *parent)
 {
     m_model = new SqlQueryModel(this);
 
-    //setMouseTracking(true);
+    setMouseTracking(true);
     setWordWrap(true);
 
     horizontalHeader()->setFixedHeight(50);
     horizontalHeader()->setSectionResizeMode(QHeaderView::Custom);
+    horizontalHeader()->setStretchLastSection(true);
 
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-    horizontalHeader()->setStretchLastSection(true);
     setSelectionBehavior(QTableView::SelectRows);
 
     verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
@@ -43,6 +44,7 @@ MonitoringTableView::MonitoringTableView(QWidget *parent)
 
     setModel(m_model);
     connect(m_model, &QSqlQueryModel::dataChanged, this, &MonitoringTableView::dataUpdated);
+    connect(this, &QTableView::clicked, this, [=](const QModelIndex &index) { edit(index); });
 }
 
 void MonitoringTableView::updateUiData(const QString& mkod, const QString& hskichkod)
@@ -63,6 +65,8 @@ void MonitoringTableView::updateUiData(const QString& mkod, const QString& hskic
     setColumnWidth(2, 200);
     hideColumn(KNIQNER_COLUMN_INDEX);
     hideColumn(HASHXMNER_COLUMN_INDEX);
+    //NumericDelegate* editor = new NumericDelegate(this);
+    //setItemDelegateForColumn(HASHVERC_COLUMN_INDEX, editor);
 }
 
 QMap<QString, QString> MonitoringTableView::getInfo() const
@@ -148,4 +152,3 @@ void MonitoringTableView::mouseReleaseEvent(QMouseEvent *event)
     }
     QTableView::mousePressEvent(event);
 }
-

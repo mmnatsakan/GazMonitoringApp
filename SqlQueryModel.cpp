@@ -59,7 +59,6 @@ bool SqlQueryModel::updateMonitoringTable(const QModelIndex &index, const QVaria
     default:
         return false;
     }
-
     QSqlQuery query;
     query.prepare(QString("UPDATE cucak SET " + columnName + " = :value WHERE mkod = :mkod and abonhamar = :abonhamar "));
 

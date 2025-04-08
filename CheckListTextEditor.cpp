@@ -25,7 +25,6 @@ void CheckListTextEditor::createMembers()
         QCheckBox* checkBox = new QCheckBox(meknab, m_mainWidget);
         m_checkBoxes.append(checkBox);
         connect(checkBox, &QCheckBox::checkStateChanged, this,[=](){
-            qDebug() << checkBox->checkState() << " 000000000000000000000000000000000000";
             update();
             repaint();
         });
@@ -77,14 +76,6 @@ void CheckListTextEditor::makeConnections()
 {
     connect(m_acceptButton, &QPushButton::clicked, this, &QDialog::accept);
     connect(m_cancelButton, &QPushButton::clicked, this, &QDialog::reject);
-}
-#include <QMouseEvent>
-#include <QMessageBox>
-void CheckListTextEditor::mousePressEvent(QMouseEvent *event)
-{
-    qDebug() << m_checkBoxes[3]->pos();
-    QMessageBox::information(nullptr, "CheckListTextEditor::mousePressEvent", "( " + QString::number(event->pos().x()) + ", " + QString::number(event->pos().y()) + " )");
-    QDialog::mousePressEvent(event);
 }
 
 void CheckListTextEditor::setData(const QString &data)

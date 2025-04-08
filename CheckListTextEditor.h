@@ -28,10 +28,6 @@ private:
 
     QPushButton* m_acceptButton;
     QPushButton* m_cancelButton;
-
-    // QWidget interface
-protected:
-    void mousePressEvent(QMouseEvent *event);
 };
 
 #endif // CHECKLISTTEXTEDITOR_H

@@ -69,6 +69,8 @@ void DetailsWidget::createMembers()
     m_tableWidget->setShowGrid(true);
     m_tableWidget->setGridStyle(Qt::SolidLine);
     m_tableWidget->setWordWrap(true);
+    m_tableWidget->setMouseTracking(true);
+
 
     m_tableWidget->setDisabled(true);
 }
@@ -76,7 +78,7 @@ void DetailsWidget::createMembers()
 void DetailsWidget::installStyleSheets()
 {
     m_customerLabel->setStyleSheet(LABEL_STYLE_SHEET);
-    m_tableWidget->setStyleSheet(TABLE_WIDGET_STYLE_SHEET);
+    m_tableWidget->setStyleSheet(TABLE_WIDGET_STYLE_SHEET + SCROLLBAR_STYLE_SHEET);
 }
 
 void DetailsWidget::setupLayout()

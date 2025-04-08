@@ -9,25 +9,28 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    AndroidController.cpp \
     CheckListTextEditor.cpp \
     DatabaseController.cpp \
     DetailsWidget.cpp \
     MainWindow.cpp \
     MonitoringPage.cpp \
     MonitoringTableView.cpp \
+    NumericDelegate.cpp \
     SqlQueryModel.cpp \
     StartPage.cpp \
     main.cpp
 
 HEADERS += \
+    AndroidController.h \
     CheckListTextEditor.h \
     Constants.h \
     DatabaseController.h \
     DetailsWidget.h \
-    Json/Json.h \
     MainWindow.h \
     MonitoringPage.h \
     MonitoringTableView.h \
+    NumericDelegate.h \
     SqlQueryModel.h \
     StartPage.h \
     UIStyle.h

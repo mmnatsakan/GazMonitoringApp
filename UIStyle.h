@@ -13,7 +13,7 @@ const QString PUSH_BUTTON_STYLE_SHEET = "QPushButton{border: none; outline: none
                                         "QPushButton:hover{background: #02768C;}"\
                                         "QPushButton:pressed{background: #318394;}";
 
-const QString SCROLLBAR_STYLE_SHEET =   "QScrollBar:vertical {border: none; border-radius: 8px; background: transparent; width: 16px; }"\
+const QString SCROLLBAR_STYLE_SHEET =   "QScrollBar:vertical {border: none; border-radius: 8px; background: transparent; width: 30px; }"\
                                         "QScrollBar::handle:vertical {border: none; background: #808c9c; min-height: 10px; border-radius: 8px; }"\
                                         "QScrollBar::add-line:vertical { border: none; height: 0px; subcontrol-position: bottom; subcontrol-origin: margin; }"\
                                         "QScrollBar::sub-line:vertical { border: none; height: 0px; subcontrol-position: top; subcontrol-origin: margin; } "\
