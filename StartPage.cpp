@@ -15,6 +15,8 @@ StartPage::StartPage(QWidget *parent)
     installStyleSheets();
     setupLayout();
     makeConnections();
+    setWindowFlags(Qt::FramelessWindowHint);
+    setAttribute(Qt::WA_AcceptTouchEvents);
 }
 
 QMap<QString, QString> StartPage::getMainData() const

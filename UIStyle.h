@@ -48,10 +48,10 @@ const QString TABLE_VIEW_STYLE_SHEET = "QTableView {background-color: rgb(255, 2
                                        " font-size: 16px; background-color: rgb(255, 255, 255); color: rgb(222, 109, 5); }";
 
 const QString CHECKBOX_STYLE_SHEET =   "QCheckBox::indicator{width: 15px; height: 15px;}"\
-                                        "QCheckBox{color: #000000; font-size: 14px; font-family: Arial;}";
+                                        "QCheckBox{color: #000000; font-size: 14px;}";
 
-const QString TEXTBOX_STYLE_SHEET = "QTextEdit{padding: 5px; font-size: 14px; font-weight: 400; color: red; background: #98FF98;"\
-                                    " border: 1px solid white; border-radius: 10px;}";
+const QString TEXTBOX_STYLE_SHEET = "QTextEdit{padding: 5px; font-size: 14px; font-weight: 400; color: black; background: white;"\
+                                    " border: 1px solid #98FF98; border-radius: 10px;}";
 
 
 #endif // UISTYLE_H

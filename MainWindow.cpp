@@ -14,6 +14,8 @@ MainWindow::MainWindow(QWidget *parent)
     createMembers();
     makeConnections();
     setupLayout();
+    setWindowFlags(Qt::FramelessWindowHint);
+    setAttribute(Qt::WA_AcceptTouchEvents);
 }
 
 void MainWindow::createMembers()

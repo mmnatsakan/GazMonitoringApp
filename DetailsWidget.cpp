@@ -19,6 +19,8 @@ DetailsWidget::DetailsWidget(const MainData &mainData, QWidget *parent)
     installStyleSheets();
     setupLayout();
     updateData(mainData);
+    setWindowFlags(Qt::FramelessWindowHint);
+    setAttribute(Qt::WA_AcceptTouchEvents);
 }
 
 void DetailsWidget::updateData(const MainData& mainData)

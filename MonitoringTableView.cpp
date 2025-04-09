@@ -17,34 +17,10 @@ MonitoringTableView::MonitoringTableView(QWidget *parent)
     : QTableView{parent}
 {
     m_model = new SqlQueryModel(this);
-
-    setMouseTracking(true);
-    setWordWrap(true);
-
-    horizontalHeader()->setFixedHeight(50);
-    horizontalHeader()->setSectionResizeMode(QHeaderView::Custom);
-    horizontalHeader()->setStretchLastSection(true);
-
-    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
-    setSelectionBehavior(QTableView::SelectRows);
-
-    verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
-    verticalHeader()->setDefaultSectionSize(50);
-
-    verticalScrollBar()->setStyleSheet(SCROLLBAR_STYLE_SHEET);
-    horizontalScrollBar()->setStyleSheet(SCROLLBAR_STYLE_SHEET);
-
-    verticalScrollBar()->setContextMenuPolicy(Qt::NoContextMenu);
-    horizontalScrollBar()->setContextMenuPolicy(Qt::NoContextMenu);
-
-    setAlternatingRowColors(true);
-    setStyleSheet(TABLE_VIEW_STYLE_SHEET);
+    installStyleSheets();
+    makeConnections();
 
     setModel(m_model);
-    connect(m_model, &QSqlQueryModel::dataChanged, this, &MonitoringTableView::dataUpdated);
-    connect(this, &QTableView::clicked, this, [=](const QModelIndex &index) { edit(index); });
 }
 
 void MonitoringTableView::updateUiData(const QString& mkod, const QString& hskichkod)
@@ -61,12 +37,13 @@ void MonitoringTableView::updateUiData(const QString& mkod, const QString& hskic
         m_model->setHeaderData(i, Qt::Horizontal, MONITORING_HEADERS_LIST[i]);
     }
 
-    setColumnWidth(1, 200);
-    setColumnWidth(2, 200);
+    setColumnWidth(1, 180);
+    setColumnWidth(2, 180);
     hideColumn(KNIQNER_COLUMN_INDEX);
     hideColumn(HASHXMNER_COLUMN_INDEX);
-    //NumericDelegate* editor = new NumericDelegate(this);
-    //setItemDelegateForColumn(HASHVERC_COLUMN_INDEX, editor);
+//    hideColumn(HASCE_COLUMN_INDEX);
+    // NumericDelegate* editor = new NumericDelegate(this);
+    // setItemDelegateForColumn(HASHVERC_COLUMN_INDEX, editor);
 }
 
 QMap<QString, QString> MonitoringTableView::getInfo() const
@@ -85,6 +62,38 @@ QMap<QString, QString> MonitoringTableView::getInfo() const
         infoMap["totalCount"] =  QString::number(countQuery.value(1).toInt());
     }
     return infoMap;
+}
+
+void MonitoringTableView::installStyleSheets()
+{
+    setAlternatingRowColors(true);
+    setMouseTracking(true);
+    setWordWrap(true);
+
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    horizontalHeader()->setFixedHeight(50);
+    horizontalHeader()->setSectionResizeMode(QHeaderView::Custom);
+    horizontalHeader()->setStretchLastSection(true);
+
+    verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+    verticalHeader()->setDefaultSectionSize(50);
+
+    verticalScrollBar()->setContextMenuPolicy(Qt::NoContextMenu);
+    horizontalScrollBar()->setContextMenuPolicy(Qt::NoContextMenu);
+
+    setSelectionBehavior(QTableView::SelectRows);
+
+    verticalScrollBar()->setStyleSheet(SCROLLBAR_STYLE_SHEET);
+    horizontalScrollBar()->setStyleSheet(SCROLLBAR_STYLE_SHEET);
+    setStyleSheet(TABLE_VIEW_STYLE_SHEET);
+}
+
+void MonitoringTableView::makeConnections()
+{
+    connect(m_model, &QSqlQueryModel::dataChanged, this, &MonitoringTableView::dataUpdated);
+    connect(this, &QTableView::clicked, this, [=](const QModelIndex &index) { edit(index); });
 }
 
 void MonitoringTableView::showDetailsWidget(int row)
@@ -117,38 +126,30 @@ void MonitoringTableView::showDetailsWidget(int row)
     dlg->show();
 }
 
-void MonitoringTableView::keyPressEvent(QKeyEvent *event)
-{
-    if (event->key() == Qt::Key_Delete) {
-        QModelIndex currentIndex = this->currentIndex();
-        if (currentIndex.isValid()) {
-            m_model->setData(currentIndex, QVariant(QVariant::String), Qt::EditRole);
-        }
-    } else {
-        QTableView::keyPressEvent(event);
-    }
-}
-
 void MonitoringTableView::mouseReleaseEvent(QMouseEvent *event)
 {
-    QModelIndex clickedIndex = indexAt(event->pos());
-    if (clickedIndex.isValid()) {
-        if(clickedIndex.column() == MEKNAB_COLUMN_INDEX){
+    QModelIndex currentIndex = indexAt(event->pos());
+    if (currentIndex.isValid()) {
+        if(currentIndex.column() == MEKNAB_COLUMN_INDEX){
             CheckListTextEditor* dlg = new CheckListTextEditor(nullptr);
-            dlg->setData(m_model->data(clickedIndex).toString());
+            dlg->setData(m_model->data(currentIndex).toString());
             if(dlg->exec() == QDialog::Accepted)
-                m_model->setData(clickedIndex, dlg->getData(), Qt::EditRole);
+                m_model->setData(currentIndex, dlg->getData(), Qt::EditRole);
             dlg->deleteLater();
             return;
         }
-        if(clickedIndex.column() == 0){
-            showDetailsWidget(clickedIndex.row());
+        if(currentIndex.column() == ABONHAMAR_COLUMN_INDEX){
+            showDetailsWidget(currentIndex.row());
             return;
         }
-        clickedIndex = model()->index(clickedIndex.row(), HASHVERC_COLUMN_INDEX);
+        qDebug() << currentIndex << "  0000000000000000000000000000000";
+        currentIndex = model()->index(currentIndex.row(), HASHVERC_COLUMN_INDEX);
         selectionModel()->clearSelection();
-        selectionModel()->select(clickedIndex, QItemSelectionModel::Select | QItemSelectionModel::Current);
-        setCurrentIndex(clickedIndex);
+        selectionModel()->select(currentIndex, QItemSelectionModel::Select | QItemSelectionModel::Current);
+        setCurrentIndex(currentIndex);
+
+        qDebug() << currentIndex << "  1111111111111111111111111111111";
+        //edit(currentIndex);
     }
     QTableView::mousePressEvent(event);
 }

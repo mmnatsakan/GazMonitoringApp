@@ -8,9 +8,6 @@ class DatabaseController : public QObject
 {
 public:
     static DatabaseController* instance();
-#ifdef ANDROID
-    void copyDatabaseIfNeeded();
-#endif
     bool openDatabase();
     void closeDatabase();
 
@@ -22,6 +19,9 @@ private:
     //remove copy constructor and assignment operator for Singleton
     DatabaseController(const DatabaseController&) = delete;
     DatabaseController& operator=(const DatabaseController&) = delete;
+#ifdef ANDROID
+    bool copyDatabaseIfNeeded();
+#endif
 
     QSqlDatabase m_db;
 

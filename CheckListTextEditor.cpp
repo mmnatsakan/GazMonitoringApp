@@ -15,6 +15,7 @@ CheckListTextEditor::CheckListTextEditor(QWidget *parent)
     installStyleSheets();
     setupLayout();
     makeConnections();
+    setWindowFlags(Qt::FramelessWindowHint);
     setAttribute(Qt::WA_AcceptTouchEvents);
 }
 
@@ -24,10 +25,6 @@ void CheckListTextEditor::createMembers()
     for (const QString& meknab : MEKNAB_LIST) {
         QCheckBox* checkBox = new QCheckBox(meknab, m_mainWidget);
         m_checkBoxes.append(checkBox);
-        connect(checkBox, &QCheckBox::checkStateChanged, this,[=](){
-            update();
-            repaint();
-        });
     }
     m_textEdit = new QTextEdit(m_mainWidget);
     m_textEdit->setPlaceholderText("Մուտքագրել տեքստ...");
@@ -76,6 +73,16 @@ void CheckListTextEditor::makeConnections()
 {
     connect(m_acceptButton, &QPushButton::clicked, this, &QDialog::accept);
     connect(m_cancelButton, &QPushButton::clicked, this, &QDialog::reject);
+    for(auto& checkBox : m_checkBoxes) {
+        connect(checkBox, &QCheckBox::checkStateChanged, this,[=](){
+            update();
+            repaint();
+        });
+    }
+    connect(m_textEdit, &QTextEdit::cursorPositionChanged, this,[=](){
+        update();
+        repaint();
+    });
 }
 
 void CheckListTextEditor::setData(const QString &data)
@@ -95,7 +102,10 @@ QString CheckListTextEditor::getData() const
         if (m_checkBoxes[i]->isChecked())
             selectedOptions << m_checkBoxes[i]->text();
     }
-    return QString("%1\n%2").arg(selectedOptions.join(" "), m_textEdit->toPlainText());
+    QString meknab = selectedOptions.join(" ");
+    if(!m_textEdit->toPlainText().isEmpty())
+        meknab += "\n" + m_textEdit->toPlainText();
+    return meknab;
 }
 
 

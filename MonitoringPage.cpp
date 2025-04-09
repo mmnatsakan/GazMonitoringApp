@@ -17,7 +17,8 @@ MonitoringPage::MonitoringPage(QWidget *parent)
     installStyleSheets();
     setupLayout();
     makeConnections();
-
+    setWindowFlags(Qt::FramelessWindowHint);
+    setAttribute(Qt::WA_AcceptTouchEvents);
 }
 
 void MonitoringPage::updateData(QMap<QString, QString> topWidgetDataMap)

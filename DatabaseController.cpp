@@ -26,42 +26,42 @@ DatabaseController *DatabaseController::instance()
 }
 
 #ifdef ANDROID
-void DatabaseController::copyDatabaseIfNeeded() {
-    //QMessageBox::information(nullptr, "0000000000000000000000000000", QStandardPaths::writableLocation(QStandardPaths::DownloadLocation));
-
+bool DatabaseController::copyDatabaseIfNeeded() {
     QString fileName = "Monitoring.sqlite";
-
-    QString documentsPath = QStandardPaths::writableLocation(QStandardPaths::DownloadLocation);
-    QString sourceFile = documentsPath + "/" + fileName;
     QString appDataPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-    QDir dir;
-    //QMessageBox::information(nullptr, "AAAAAAAAAAAAAAAA", appDataPath);
 
+    QString destFile = appDataPath + "/" + fileName;
+
+    if (QFile::exists(destFile)) {
+        if(QMessageBox::question(nullptr, "Database exists.", "Remove existing database?") == QMessageBox::No){
+            return true;
+        }
+        else if (!QFile::remove(destFile)) {
+            QMessageBox::information(nullptr, "Failed to remove existing file:", destFile);
+            qDebug() << "Failed to remove existing file:" << destFile;
+            return false;
+        }
+    }
+
+    QDir dir;
     if (!dir.exists(appDataPath)) {
         if (!dir.mkpath(appDataPath)) {
             QMessageBox::information(nullptr, "Failed to create directory:", appDataPath);
             qDebug() << "Failed to create directory:" << appDataPath;
-            return;
-        }
-    }
-    QString destFile = appDataPath + "/" + fileName;
-
-    if (QFile::exists(destFile)) {
-        if (!QFile::remove(destFile)) {
-            QMessageBox::information(nullptr, "Failed to remove existing file:", destFile);
-            qDebug() << "Failed to remove existing file:" << destFile;
-            return;
+            return false;
         }
     }
 
-    if (QFile::copy(sourceFile, destFile)) {
-        //QMessageBox::information(nullptr, "File successfully copied from", sourceFile);
-        qDebug() << "File successfully copied from" << sourceFile << "to" << destFile;
-    } else {
+    QString sourceFile = QStandardPaths::writableLocation(QStandardPaths::DownloadLocation) + "/" + fileName;
+    if (!QFile::exists(sourceFile)) {
+        QMessageBox::information(nullptr, "Error", "Source database does not exist.");
+        return false;
+    }
+    if (!QFile::copy(sourceFile, destFile)) {
         QMessageBox::information(nullptr, "Failed to copy file.", sourceFile + " *** " + destFile);
-        qDebug() << "Failed to copy file. Check if the source file exists and if permissions are granted.";
-        QApplication::quit();
+        return false;
     }
+    return true;
 }
 
 void requestPermission(const QString &permissionStr, int requestCode = 1234)
@@ -92,9 +92,10 @@ void requestPermission(const QString &permissionStr, int requestCode = 1234)
 
 bool DatabaseController::openDatabase() {
 #ifdef ANDROID
-    copyDatabaseIfNeeded();
-    QString writablePath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-    QString dbFilePath = writablePath + "/Monitoring.sqlite";
+    // if(!copyDatabaseIfNeeded())
+    //     QApplication::quit();
+    //QString writablePath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QString dbFilePath = QStandardPaths::writableLocation(QStandardPaths::DownloadLocation) + "/Monitoring.sqlite";
 #else
     QString dbFilePath = "D:/Monitoring.sqlite";
 

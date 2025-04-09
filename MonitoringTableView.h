@@ -16,15 +16,15 @@ public:
 
 
 private:
+    void installStyleSheets();
+    void makeConnections();
+
     void clearCell(const QModelIndex &index);
     void showDetailsWidget(int row);
     SqlQueryModel* m_model;
 
     QString m_mkod;
     QString m_hskichkod;
-
-protected:
-    void keyPressEvent(QKeyEvent *event) override;
 
 signals:
     void dataUpdated(const QModelIndex &topLeft, const QModelIndex &bottomRight,
