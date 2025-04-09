@@ -1,11 +1,11 @@
-#ifndef ANDROIDCONTROLLER_H
-#define ANDROIDCONTROLLER_H
+#ifndef ANDROIDHELPER_H
+#define ANDROIDHELPER_H
 
-namespace AndroidController {
+namespace AndroidHelper {
     bool isDarkModeActive();
     void setDarkMode(bool enable);
     void applyQtDarkPalette();
     void forceLandscapeOrientation();
 }
 
-#endif // ANDROIDCONTROLLER_H
+#endif // ANDROIDHELPER_H

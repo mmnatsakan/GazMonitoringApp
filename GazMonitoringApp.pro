@@ -9,7 +9,7 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    AndroidController.cpp \
+    AndroidHelper.cpp \
     CheckListTextEditor.cpp \
     DatabaseController.cpp \
     DetailsWidget.cpp \
@@ -22,7 +22,7 @@ SOURCES += \
     main.cpp
 
 HEADERS += \
-    AndroidController.h \
+    AndroidHelper.h \
     CheckListTextEditor.h \
     Constants.h \
     DatabaseController.h \
@@ -33,7 +33,8 @@ HEADERS += \
     NumericDelegate.h \
     SqlQueryModel.h \
     StartPage.h \
-    UIStyle.h
+    UIStyle.h \
+    Utils.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

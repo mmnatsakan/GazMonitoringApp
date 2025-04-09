@@ -11,7 +11,7 @@
 #include <QDebug>
 
 
-DetailsWidget::DetailsWidget(const MainData &mainData, QWidget *parent)
+DetailsWidget::DetailsWidget(const Utils::MainData &mainData, QWidget *parent)
     : QDialog(parent)
 {
     setMinimumWidth(700);
@@ -23,7 +23,7 @@ DetailsWidget::DetailsWidget(const MainData &mainData, QWidget *parent)
     setAttribute(Qt::WA_AcceptTouchEvents);
 }
 
-void DetailsWidget::updateData(const MainData& mainData)
+void DetailsWidget::updateData(const Utils::MainData& mainData)
 {
         m_tableWidget->setDisabled(false);
         m_customerLabel->setText(mainData.abonhamar + ", " + mainData.aah + ", " +
@@ -34,7 +34,7 @@ void DetailsWidget::updateData(const MainData& mainData)
         m_tableWidget->setRowCount(rowCount);
 
         for (int row = 0; row < rowCount; ++row) {
-            const AmisData &amisData = mainData.tableDataList[row];
+            const Utils::AmisData &amisData = mainData.tableDataList[row];
 
             QTableWidgetItem *item0 = new QTableWidgetItem(amisData.taram);
             item0->setFlags(item0->flags() & ~(Qt::ItemIsSelectable | Qt::ItemIsEnabled));

@@ -12,7 +12,7 @@ class MonitoringTableView : public QTableView
 public:
     explicit MonitoringTableView(QWidget *parent = nullptr);
     void updateUiData(const QString& mkod, const QString& hskichkod);
-    QMap<QString, QString> getInfo() const;
+    QMap<QString, QString> getCountsInfo() const;
 
 
 private:
@@ -22,9 +22,6 @@ private:
     void clearCell(const QModelIndex &index);
     void showDetailsWidget(int row);
     SqlQueryModel* m_model;
-
-    QString m_mkod;
-    QString m_hskichkod;
 
 signals:
     void dataUpdated(const QModelIndex &topLeft, const QModelIndex &bottomRight,

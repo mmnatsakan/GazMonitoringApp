@@ -5,13 +5,14 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QBoxLayout>
+#include <QCheckBox>
 
 
 MonitoringPage::MonitoringPage(QWidget *parent)
     : QWidget{parent}
     , m_maxSparum(1000)
 {
-    //setMinimumSize(1200, 800);
+    setMinimumSize(1200, 800);
 
     createMembers();
     installStyleSheets();
@@ -34,7 +35,9 @@ void MonitoringPage::createMembers()
     m_mainWidget = new QWidget(this);
 
     m_goToStartPageButton = new QPushButton("Հետ", m_mainWidget);
-    m_goToStartPageButton->setFixedSize(100, 50);
+    m_goToStartPageButton->setFixedSize(80, 30);
+
+    m_showAllCheckBox = new QCheckBox("Բոլորը", m_mainWidget);
 
     m_abonentCountLabel = new QLabel(m_mainWidget);
     m_ttLabel = new QLabel(m_mainWidget);
@@ -46,6 +49,7 @@ void MonitoringPage::createMembers()
 void MonitoringPage::installStyleSheets()
 {
     m_goToStartPageButton->setStyleSheet(PUSH_BUTTON_STYLE_SHEET);
+    m_showAllCheckBox->setStyleSheet(CHECKBOX_STYLE_SHEET);
     m_abonentCountLabel->setStyleSheet("font-size: 18px; color: green; font-weight: 600; border: none;");
     m_ttLabel->setStyleSheet("font-size: 18px; color: black; font-weight: 600; border: none;");
     m_hskichLabel->setStyleSheet("font-size: 18px; color: black; font-weight: 600; border: none;");
@@ -55,19 +59,22 @@ void MonitoringPage::setupLayout()
 {
     QHBoxLayout* topLayout = new QHBoxLayout();
     topLayout->setContentsMargins(0, 0, 0, 0);
-    topLayout->setSpacing(50);
+    topLayout->setSpacing(0);
+    topLayout->addStretch();
     topLayout->addWidget(m_goToStartPageButton);
     topLayout->addStretch();
     topLayout->addWidget(m_abonentCountLabel);
     topLayout->addStretch();
     topLayout->addWidget(m_ttLabel);
     topLayout->addStretch();
+    topLayout->addWidget(m_showAllCheckBox);
+    topLayout->addStretch();
     topLayout->addWidget(m_hskichLabel);
     topLayout->addStretch();
 
     QVBoxLayout* mainLayout = new QVBoxLayout();
-    mainLayout->setContentsMargins(10, 10, 10, 10);
-    mainLayout->setSpacing(30);
+    mainLayout->setContentsMargins(5, 5, 5, 5);
+    mainLayout->setSpacing(5);
     mainLayout->addLayout(topLayout);
     mainLayout->addWidget(m_tableView);
     m_mainWidget->setLayout(mainLayout);
@@ -87,7 +94,7 @@ void MonitoringPage::makeConnections()
 
 void MonitoringPage::updateCounts()
 {
-    QMap<QString, QString> infoMap = m_tableView->getInfo();
+    QMap<QString, QString> infoMap = m_tableView->getCountsInfo();
 
     m_abonentCountLabel->setText(infoMap["filledCount"] + " / " + infoMap["totalCount"]);
 }

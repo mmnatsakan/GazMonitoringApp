@@ -6,6 +6,7 @@
 class QLabel;
 class QPushButton;
 class MonitoringTableView;
+class QCheckBox;
 
 class MonitoringPage : public QWidget
 {
@@ -25,6 +26,8 @@ private:
     QWidget* m_mainWidget;
 
     QPushButton* m_goToStartPageButton;
+    QCheckBox* m_showAllCheckBox;
+
     QLabel* m_abonentCountLabel;
     QLabel* m_ttLabel;
     QLabel* m_hskichLabel;

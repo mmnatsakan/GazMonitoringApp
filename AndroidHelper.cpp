@@ -1,4 +1,4 @@
-#include "AndroidController.h"
+#include "AndroidHelper.h"
 
 #include <QApplication>
 #include <QPalette>
@@ -8,7 +8,7 @@
 #include <QJniObject>
 #endif
 
-namespace AndroidController {
+namespace AndroidHelper {
 
     bool isDarkModeActive()
     {
