@@ -21,8 +21,6 @@ private:
     void setupLayout();
     void makeConnections();
 
-    void updateCounts();
-
     QWidget* m_mainWidget;
 
     QPushButton* m_goToStartPageButton;

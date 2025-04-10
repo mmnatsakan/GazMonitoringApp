@@ -53,6 +53,7 @@ void SqlQueryModel::setMkodHskichkod(const QString &mkod, const QString &hskichk
     m_hskichkod = hskichkod;
     m_baseQuery = MONITORING_MODEL_BASE_QUERY;
     refresh();
+    sendCountsInfo();
 }
 
 bool SqlQueryModel::updateMainTable(const QModelIndex &index, const QVariant &value)
@@ -80,6 +81,8 @@ bool SqlQueryModel::updateMainTable(const QModelIndex &index, const QVariant &va
         qWarning() << "Update failed:" << query.lastError().text();
         return false;
     }
+    if(index.column() == HASHVERC_COLUMN_INDEX)
+        sendCountsInfo();
     return true;
 }
 
@@ -91,7 +94,7 @@ void SqlQueryModel::setBaseQuery(const QString &query)
     refresh();
 }
 
-QMap<QString, QString> SqlQueryModel::getCountsInfo() const
+void SqlQueryModel::sendCountsInfo()
 {
     QSqlQuery query;
     query.prepare(QString("SELECT sum(iif(hashverc is not null, 1, 0)) as filledCount, COUNT(*) as totalCount FROM %1 "
@@ -104,12 +107,7 @@ QMap<QString, QString> SqlQueryModel::getCountsInfo() const
     query.exec();
     qDebug() << query.executedQuery();
 
-    QMap<QString, QString> infoMap;
-    if (query.next()) {
-        infoMap["filledCount"] = QString::number(query.value(0).toInt());
-        infoMap["totalCount"] =  QString::number(query.value(1).toInt());
-    }
-    return infoMap;
+    emit filledRowsCountsChanged(QString::number(query.value(0).toInt()), QString::number(query.value(1).toInt()));
 }
 
 Utils::MainData SqlQueryModel::getDetails(const QString &value, bool searchByAbonhamar) const
@@ -117,7 +115,7 @@ Utils::MainData SqlQueryModel::getDetails(const QString &value, bool searchByAbo
     QSqlQuery query;
     query.prepare(  QString("SELECT abonhamar, TRIM(aah) AS aah, TRIM(hasce) AS hasce, TRIM(hashvichn) AS hashvichn, "
                     "hashnaxc, hashxmner, kniqner "
-                          "FROM :tableName WHERE mkod = :mkod AND :searchColumn = :value ").arg(m_mainTable).arg(searchByAbonhamar ? "abonhamar" : "hashvichn"));
+                          "FROM %1 WHERE mkod = :mkod AND trim(%2) = :value ").arg(m_mainTable).arg(searchByAbonhamar ? "abonhamar" : "hashvichn"));
     query.bindValue(":mkod", m_mkod);
     query.bindValue(":value", value);
     qDebug() << query.lastQuery();

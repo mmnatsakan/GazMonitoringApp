@@ -16,7 +16,7 @@ public:
     void setMkodHskichkod(const QString& mkod, const QString& hskichkod);
     void setBaseQuery(const QString& query);
     void refresh();
-    QMap<QString, QString> getCountsInfo() const;
+    void sendCountsInfo();
     Utils::MainData getDetails(const QString& value, bool searchByAbonhamar) const;
 
 private:
@@ -26,6 +26,9 @@ private:
     QString m_mkod;
     QString m_hskichkod;
     QString m_mainTable;
+
+signals:
+    void filledRowsCountsChanged(const QString& filledCount, const QString& totalCount);
 
 };
 

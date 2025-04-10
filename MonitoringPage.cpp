@@ -27,7 +27,6 @@ void MonitoringPage::updateData(QMap<QString, QString> topWidgetDataMap)
     m_ttLabel->setText(topWidgetDataMap["tt"]);
     m_hskichLabel->setText(topWidgetDataMap["hskich"]);
     m_tableView->updateUiData(topWidgetDataMap["tt"].left(2), topWidgetDataMap["hskich"].left(2));
-    updateCounts();
 }
 
 void MonitoringPage::createMembers()
@@ -89,12 +88,7 @@ void MonitoringPage::setupLayout()
 void MonitoringPage::makeConnections()
 {
     connect(m_goToStartPageButton, &QPushButton::clicked, this, &MonitoringPage::goToStartPage);
-    connect(m_tableView, &MonitoringTableView::dataUpdated, this, &MonitoringPage::updateCounts);
-}
-
-void MonitoringPage::updateCounts()
-{
-    QMap<QString, QString> infoMap = m_tableView->getCountsInfo();
-
-    m_abonentCountLabel->setText(infoMap["filledCount"] + " / " + infoMap["totalCount"]);
+    connect(m_tableView, &MonitoringTableView::filledRowsCountsChanged, this, [=](const QString& filledCount, const QString& totalCount){
+        m_abonentCountLabel->setText(filledCount + " / " + totalCount);
+    });
 }

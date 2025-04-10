@@ -12,24 +12,24 @@ class MonitoringTableView : public QTableView
 public:
     explicit MonitoringTableView(QWidget *parent = nullptr);
     void updateUiData(const QString& mkod, const QString& hskichkod);
-    QMap<QString, QString> getCountsInfo() const;
-
 
 private:
     void installStyleSheets();
     void makeConnections();
+    void showDetails(const QString &value, bool searchByAbonhamar);
 
     void clearCell(const QModelIndex &index);
-    void showDetailsWidget(int row);
     SqlQueryModel* m_model;
 
-signals:
-    void dataUpdated(const QModelIndex &topLeft, const QModelIndex &bottomRight,
-                     const QList<int> &roles = QList<int>());
-
-    // QWidget interface
 protected:
     void mouseReleaseEvent(QMouseEvent *event);
+
+signals:
+    void filledRowsCountsChanged(const QString& filledCount, const QString& totalCount);
+
+private slots:
+    void onHorizontalHeaderSectionClickedSlot(int section);
+
 };
 
 #endif // MONITORINGTABLEVIEW_H

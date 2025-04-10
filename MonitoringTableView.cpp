@@ -13,6 +13,7 @@
 #include <QSqlError>
 #include <QKeyEvent>
 #include <QMouseEvent>
+#include <QInputDialog>
 
 MonitoringTableView::MonitoringTableView(QWidget *parent)
     : QTableView{parent}
@@ -27,11 +28,11 @@ MonitoringTableView::MonitoringTableView(QWidget *parent)
 void MonitoringTableView::updateUiData(const QString& mkod, const QString& hskichkod)
 {
     m_model->clear();
-    m_model->setMkodHskichkod(mkod, hskichkod);
 
     for(int i = 0; i < MONITORING_HEADERS_LIST.count(); ++i){
         m_model->setHeaderData(i, Qt::Horizontal, MONITORING_HEADERS_LIST[i]);
     }
+    m_model->setMkodHskichkod(mkod, hskichkod);
 
     setColumnWidth(AAH_COLUMN_INDEX, 150);
     setColumnWidth(HASCE_COLUMN_INDEX, 180);
@@ -40,11 +41,6 @@ void MonitoringTableView::updateUiData(const QString& mkod, const QString& hskic
 //    hideColumn(HASCE_COLUMN_INDEX);
     // NumericDelegate* editor = new NumericDelegate(this);
     // setItemDelegateForColumn(HASHVERC_COLUMN_INDEX, editor);
-}
-
-QMap<QString, QString> MonitoringTableView::getCountsInfo() const
-{
-    return m_model->getCountsInfo();
 }
 
 void MonitoringTableView::installStyleSheets()
@@ -75,13 +71,30 @@ void MonitoringTableView::installStyleSheets()
 
 void MonitoringTableView::makeConnections()
 {
-    connect(m_model, &QSqlQueryModel::dataChanged, this, &MonitoringTableView::dataUpdated);
-    connect(this, &QTableView::clicked, this, [=](const QModelIndex &index) { edit(index); });
+    connect(m_model, &SqlQueryModel::filledRowsCountsChanged, this, &MonitoringTableView::filledRowsCountsChanged);
+    //connect(this, &QTableView::clicked, this, [=](const QModelIndex &index) { edit(index); });
+    connect(horizontalHeader(), &QHeaderView::sectionClicked, this, &MonitoringTableView::onHorizontalHeaderSectionClickedSlot);
 }
 
-void MonitoringTableView::showDetailsWidget(int row)
+void MonitoringTableView::showDetails(const QString &value, bool searchByAbonhamar)
 {
+    DetailsWidget* dlg = new DetailsWidget(m_model->getDetails(value, searchByAbonhamar), nullptr);
+    dlg->setWindowFlags(Qt::Popup);
+    dlg->show();
+}
 
+void MonitoringTableView::onHorizontalHeaderSectionClickedSlot(int section)
+{
+    if(section == ABONHAMAR_COLUMN_INDEX || section == HASHVICHN_COLUMN_INDEX){
+        bool searchByAbonhamar = section == ABONHAMAR_COLUMN_INDEX;
+        QInputDialog dlg;
+        dlg.setWindowTitle(searchByAbonhamar ? "Փնտրել բաժանորդային համարով" : "Փնտրել հաշվիչի համարով");
+        //dlg.setLabelText("Please enter some text:");
+        //dlg.setTextValue("Default Value");
+        if (dlg.exec() == QDialog::Accepted) {
+            showDetails(dlg.textValue(), searchByAbonhamar);
+        }
+    }
 }
 
 void MonitoringTableView::mouseReleaseEvent(QMouseEvent *event)
@@ -97,9 +110,7 @@ void MonitoringTableView::mouseReleaseEvent(QMouseEvent *event)
             return;
         }
         if(currentIndex.column() == ABONHAMAR_COLUMN_INDEX || currentIndex.column() == HASHVICHN_COLUMN_INDEX){
-            DetailsWidget* dlg = new DetailsWidget(m_model->getDetails(m_model->data(currentIndex, Qt::DisplayRole).toString(), currentIndex.column() == ABONHAMAR_COLUMN_INDEX), nullptr);
-            dlg->setWindowFlags(Qt::Popup);
-            dlg->show();
+            showDetails(m_model->data(currentIndex, Qt::DisplayRole).toString(), currentIndex.column() == ABONHAMAR_COLUMN_INDEX);
             return;
         }
         qDebug() << currentIndex << "  0000000000000000000000000000000";
