@@ -11,13 +11,14 @@
 SqlQueryModel::SqlQueryModel(QObject* parent)
     : QSqlQueryModel(parent)
     , m_mainTable("cucak")
+    , m_filterString(" and priz_stug = 1 ")
 {
 
 }
 
-void SqlQueryModel::refresh() {
+void SqlQueryModel::refresh(bool removeFilter) {
     QSqlQuery query(QSqlDatabase::database());
-    query.prepare(m_baseQuery.arg(m_mainTable) + m_filterString);
+    query.prepare(m_baseQuery.arg(m_mainTable) + (removeFilter ? "" : m_filterString));
     query.bindValue(":mkod", m_mkod);
     query.bindValue(":hskichkod", m_hskichkod);
     qDebug() << query.lastQuery();
@@ -27,7 +28,7 @@ void SqlQueryModel::refresh() {
     }
 
     if (m_baseQuery.trimmed().toUpper().startsWith("SELECT")) {
-        setQuery(query);
+        setQuery(std::move(query));
     }
 }
 
@@ -86,36 +87,32 @@ bool SqlQueryModel::updateMainTable(const QModelIndex &index, const QVariant &va
     return true;
 }
 
-void SqlQueryModel::setBaseQuery(const QString &query)
-{
-    if(m_baseQuery == query)
-        return;
-    m_baseQuery = query;
-    refresh();
-}
-
 void SqlQueryModel::sendCountsInfo()
 {
+    int filledCount = 0;
+    int totalCount = 0;
     QSqlQuery query;
-    query.prepare(QString("SELECT sum(iif(hashverc is not null, 1, 0)) as filledCount, COUNT(*) as totalCount FROM %1 "
-                          "WHERE mkod = :mkod AND hskichkod = :hskichkod ").arg(m_mainTable)); //and filtr <> ''
+    query.prepare(QString("SELECT sum(iif(hashverc is not null, 1, 0)) AS filledCount, "
+                          "COUNT(*) AS totalCount FROM %1 "
+                          "WHERE mkod = :mkod AND hskichkod = :hskichkod AND priz_stug = 1")
+                      .arg(m_mainTable));
+
     query.bindValue(":mkod", m_mkod);
     query.bindValue(":hskichkod", m_hskichkod);
 
-    qDebug() << query.lastQuery();
-    qDebug() << query.boundValueNames() << " *** " << query.boundValues();
-    query.exec();
-    qDebug() << query.executedQuery();
-
-    emit filledRowsCountsChanged(QString::number(query.value(0).toInt()), QString::number(query.value(1).toInt()));
+    if (query.exec() && query.next()) {
+        filledCount = query.value("filledCount").toInt();
+        totalCount = query.value("totalCount").toInt();
+    }
+    emit filledRowsCountsChanged(QString::number(filledCount), QString::number(totalCount));
 }
 
 Utils::MainData SqlQueryModel::getDetails(const QString &value, bool searchByAbonhamar) const
 {
     QSqlQuery query;
     query.prepare(  QString("SELECT abonhamar, TRIM(aah) AS aah, TRIM(hasce) AS hasce, TRIM(hashvichn) AS hashvichn, "
-                    "hashnaxc, hashxmner, kniqner "
-                          "FROM %1 WHERE mkod = :mkod AND trim(%2) = :value ").arg(m_mainTable).arg(searchByAbonhamar ? "abonhamar" : "hashvichn"));
+                            "hashnaxc, hashxmner, kniqner "
+                            "FROM %1 WHERE mkod = :mkod AND trim(%2) = :value ").arg(m_mainTable).arg(searchByAbonhamar ? "abonhamar" : "hashvichn"));
     query.bindValue(":mkod", m_mkod);
     query.bindValue(":value", value);
     qDebug() << query.lastQuery();

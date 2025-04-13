@@ -1,9 +1,9 @@
 <RCC>
     <qresource prefix="/">
-        <file alias="icon_radiobutton_checked.svg">icon_radiobutton_checked.svg</file>
-        <file alias="icon_radiobutton_unchecked.svg">icon_radiobutton_unchecked.svg</file>
-        <file alias="down_arrow.svg">down_arrow.svg</file>
-        <file alias="up_arrow.svg">up_arrow.svg</file>
         <file alias="/icons/down_arrow_big.svg">icons/down_arrow_big.svg</file>
+        <file alias="icons/close.svg">icons/close.svg</file>
+        <file alias="icons/icon_accept.svg">icons/icon_accept.svg</file>
+        <file alias="icons/icon_cancel.svg">icons/icon_cancel.svg</file>
+        <file alias="icons/icon_back.svg">icons/icon_back.svg</file>
     </qresource>
 </RCC>

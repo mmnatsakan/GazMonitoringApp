@@ -19,40 +19,9 @@ DetailsWidget::DetailsWidget(const Utils::MainData &mainData, QWidget *parent)
     installStyleSheets();
     setupLayout();
     updateData(mainData);
-    setWindowFlags(Qt::FramelessWindowHint);
+    setModal(true);
     setAttribute(Qt::WA_AcceptTouchEvents);
-}
-
-void DetailsWidget::updateData(const Utils::MainData& mainData)
-{
-        m_tableWidget->setDisabled(false);
-        m_customerLabel->setText(mainData.abonhamar + ", " + mainData.aah + ", " +
-                                 mainData.hasce + ", Հեռ`0" + mainData.sot_hamar + ", Ցուցմունք՝ " + mainData.hashnaxc);
-        m_tableWidget->setUpdatesEnabled(false);
-        m_tableWidget->setRowCount(0);
-        int rowCount = mainData.tableDataList.size();
-        m_tableWidget->setRowCount(rowCount);
-
-        for (int row = 0; row < rowCount; ++row) {
-            const Utils::AmisData &amisData = mainData.tableDataList[row];
-
-            QTableWidgetItem *item0 = new QTableWidgetItem(amisData.taram);
-            item0->setFlags(item0->flags() & ~(Qt::ItemIsSelectable | Qt::ItemIsEnabled));
-            m_tableWidget->setItem(row, 0, item0);
-            QTableWidgetItem *item1 = new QTableWidgetItem(amisData.hashxm);
-            item1->setFlags(item1->flags() & ~(Qt::ItemIsSelectable | Qt::ItemIsEnabled));
-            m_tableWidget->setItem(row, 1, item1);
-            QTableWidgetItem *item2 = new QTableWidgetItem(amisData.xaxthash);
-            item2->setFlags(item2->flags() & ~(Qt::ItemIsSelectable | Qt::ItemIsEnabled));
-            m_tableWidget->setItem(row, 2, item2);
-            QTableWidgetItem *item3 = new QTableWidgetItem(amisData.hashvichn);
-            item3->setFlags(item3->flags() & ~(Qt::ItemIsSelectable | Qt::ItemIsEnabled));
-            m_tableWidget->setItem(row, 3, item3);
-            QTableWidgetItem *item4 = new QTableWidgetItem(amisData.kniqner);
-            item3->setFlags(item4->flags() & ~(Qt::ItemIsSelectable | Qt::ItemIsEnabled));
-            m_tableWidget->setItem(row, 4, item4);
-        }
-        m_tableWidget->setUpdatesEnabled(true);
+    connect(m_closeButton, &QPushButton::clicked, this, &QDialog::accept);
 }
 
 void DetailsWidget::createMembers()
@@ -60,6 +29,8 @@ void DetailsWidget::createMembers()
     m_mainWidget = new QWidget(this);
     m_customerLabel = new QLabel(m_mainWidget);
     m_customerLabel->setWordWrap(true);
+    m_closeButton = new QPushButton(QIcon(":icons/close.svg"), "", m_mainWidget);
+    m_closeButton->setFixedSize(40, 40);
 
     m_tableWidget = new QTableWidget(m_mainWidget);
     m_tableWidget->setColumnCount(5);
@@ -73,7 +44,6 @@ void DetailsWidget::createMembers()
     m_tableWidget->setWordWrap(true);
     m_tableWidget->setMouseTracking(true);
 
-
     m_tableWidget->setDisabled(true);
 }
 
@@ -85,10 +55,15 @@ void DetailsWidget::installStyleSheets()
 
 void DetailsWidget::setupLayout()
 {
+    QHBoxLayout* topLayout = new QHBoxLayout();
+    topLayout->setContentsMargins(10, 0, 10, 0);
+    topLayout->addWidget(m_customerLabel);
+    topLayout->addWidget(m_closeButton);
+
     QVBoxLayout* mainWidgetLayout = new QVBoxLayout();
-    mainWidgetLayout->setSpacing(20);
+    mainWidgetLayout->setSpacing(10);
     mainWidgetLayout->setContentsMargins(10, 10, 10, 10);
-    mainWidgetLayout->addWidget(m_customerLabel);
+    mainWidgetLayout->addLayout(topLayout);
     mainWidgetLayout->addWidget(m_tableWidget);
     m_mainWidget->setLayout(mainWidgetLayout);
 
@@ -97,4 +72,36 @@ void DetailsWidget::setupLayout()
     thisLayout->setContentsMargins(0, 0, 0, 0);
     thisLayout->addWidget(m_mainWidget);
     setLayout(thisLayout);
+}
+
+void DetailsWidget::updateData(const Utils::MainData& mainData)
+{
+    m_tableWidget->setDisabled(false);
+    m_customerLabel->setText(mainData.abonhamar + ", " + mainData.aah + ", " +
+                             mainData.hasce + ", Հեռ`0" + mainData.sot_hamar + ", Ցուցմունք՝ " + mainData.hashnaxc);
+    m_tableWidget->setUpdatesEnabled(false);
+    m_tableWidget->setRowCount(0);
+    int rowCount = mainData.tableDataList.size();
+    m_tableWidget->setRowCount(rowCount);
+
+    for (int row = 0; row < rowCount; ++row) {
+        const Utils::AmisData &amisData = mainData.tableDataList[row];
+
+        QTableWidgetItem *item0 = new QTableWidgetItem(amisData.taram);
+        item0->setFlags(item0->flags() & ~(Qt::ItemIsSelectable | Qt::ItemIsEnabled));
+        m_tableWidget->setItem(row, 0, item0);
+        QTableWidgetItem *item1 = new QTableWidgetItem(amisData.hashxm);
+        item1->setFlags(item1->flags() & ~(Qt::ItemIsSelectable | Qt::ItemIsEnabled));
+        m_tableWidget->setItem(row, 1, item1);
+        QTableWidgetItem *item2 = new QTableWidgetItem(amisData.xaxthash);
+        item2->setFlags(item2->flags() & ~(Qt::ItemIsSelectable | Qt::ItemIsEnabled));
+        m_tableWidget->setItem(row, 2, item2);
+        QTableWidgetItem *item3 = new QTableWidgetItem(amisData.hashvichn);
+        item3->setFlags(item3->flags() & ~(Qt::ItemIsSelectable | Qt::ItemIsEnabled));
+        m_tableWidget->setItem(row, 3, item3);
+        QTableWidgetItem *item4 = new QTableWidgetItem(amisData.kniqner);
+        item3->setFlags(item4->flags() & ~(Qt::ItemIsSelectable | Qt::ItemIsEnabled));
+        m_tableWidget->setItem(row, 4, item4);
+    }
+    m_tableWidget->setUpdatesEnabled(true);
 }

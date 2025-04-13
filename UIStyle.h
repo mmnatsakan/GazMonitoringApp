@@ -13,6 +13,11 @@ const QString PUSH_BUTTON_STYLE_SHEET = "QPushButton{border: none; outline: none
                                         "QPushButton:hover{background: #02768C;}"\
                                         "QPushButton:pressed{background: #318394;}";
 
+const QString ICON_PUSH_BUTTON_STYLE_SHEET =    "QPushButton{height: 40; weight: 40; border: none; outline: none; background: #87CEEB; border-radius: 5px;}"\
+                                                "QPushButton:disabled{background: transparent; border: 1px solid #999ca6;}"\
+                                                "QPushButton:hover{background: #02768C;}"\
+                                                "QPushButton:pressed{background: #318394;}";
+
 const QString SCROLLBAR_STYLE_SHEET =   "QScrollBar:vertical {border: none; border-radius: 8px; background: transparent; width: 30px; }"\
                                         "QScrollBar::handle:vertical {border: none; background: #808c9c; min-height: 10px; border-radius: 8px; }"\
                                         "QScrollBar::add-line:vertical { border: none; height: 0px; subcontrol-position: bottom; subcontrol-origin: margin; }"\
@@ -20,10 +25,10 @@ const QString SCROLLBAR_STYLE_SHEET =   "QScrollBar:vertical {border: none; bord
                                         "QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical { border: none; background: transparent; } "\
                                         "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical { background: transparent; }";
 
-const QString RADIO_BUTTON_STYLE_SHEET = "QRadioButton::indicator{width: 15px; height: 15px;}"\
-                                        "QRadioButton::indicator::checked{image: url(':/icon_radiobutton_checked.svg');}"\
-                                        "QRadioButton::indicator::unchecked{image: url(':/icon_radiobutton_unchecked.svg');}"\
-                                        "QRadioButton{color: #000000; font-size: 14px; font-family: Arial;}";
+// const QString RADIO_BUTTON_STYLE_SHEET = "QRadioButton::indicator{width: 15px; height: 15px;}"\
+//                                         "QRadioButton::indicator::checked{image: url(':/icon_radiobutton_checked.svg');}"\
+//                                         "QRadioButton::indicator::unchecked{image: url(':/icon_radiobutton_unchecked.svg');}"\
+//                                         "QRadioButton{color: #000000; font-size: 14px; font-family: Arial;}";
 
 const QString TABLE_WIDGET_STYLE_SHEET =    "QTableWidget, QTableWidget:disabled {gridline-color: gray; background-color: white; alternate-background-color: #f2f2f2; font-size: 14px; font-weight: 400}"\
                                             "QHeaderView::section {background-color: lightgray; padding: 5px; border: 1px solid gray; font-size: 14px; font-weight: 600;}"\
@@ -47,8 +52,11 @@ const QString TABLE_VIEW_STYLE_SHEET = "QTableView {background-color: rgb(255, 2
                                        "QHeaderView::section { text-align: center; min-width: 30px; min-height: 50px; border: 1px outset rgb(223, 223, 223);"
                                        " font-size: 16px; background-color: rgb(255, 255, 255); color: rgb(222, 109, 5); }";
 
-const QString CHECKBOX_STYLE_SHEET =   "QCheckBox::indicator{width: 15px; height: 15px;}"\
-                                        "QCheckBox{color: #000000; font-size: 14px;}";
+const QString MEKNAB_CHECKBOX_STYLE_SHEET = "QCheckBox::indicator{width: 15px; height: 15px;}"\
+                                            "QCheckBox{color: #000000; font-size: 14px;}";
+
+const QString CHECKBOX_STYLE_SHEET =    "QCheckBox::indicator{width: 20px; height: 20px;}"\
+                                        "QCheckBox{color: #000000; font-size: 18px;}";
 
 const QString TEXTBOX_STYLE_SHEET = "QTextEdit{padding: 5px; font-size: 14px; font-weight: 400; color: black; background: white;"\
                                     " border: 1px solid #98FF98; border-radius: 10px;}";

@@ -4,7 +4,7 @@
 #include <QDialog>
 
 class QCheckBox;
-class QTextEdit;
+class CustomTextEdit;
 class QPushButton;
 
 class CheckListTextEditor : public QDialog
@@ -24,7 +24,7 @@ private:
     QWidget* m_mainWidget;
 
     QList<QCheckBox*> m_checkBoxes;
-    QTextEdit *m_textEdit;
+    CustomTextEdit *m_textEdit;
 
     QPushButton* m_acceptButton;
     QPushButton* m_cancelButton;

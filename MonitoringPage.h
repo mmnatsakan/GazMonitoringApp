@@ -32,7 +32,6 @@ private:
 
     MonitoringTableView* m_tableView;
 
-    int m_maxSparum;
 
 signals:
     void goToStartPage();

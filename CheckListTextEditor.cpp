@@ -1,10 +1,11 @@
 #include "CheckListTextEditor.h"
 #include "Constants.h"
 #include "UIStyle.h"
+#include "AndroidBridge.h"
+#include "CustomTextEdit.h"
 
 #include <QVBoxLayout>
 #include <QCheckBox>
-#include <QTextEdit>
 #include <QPushButton>
 
 CheckListTextEditor::CheckListTextEditor(QWidget *parent)
@@ -15,6 +16,7 @@ CheckListTextEditor::CheckListTextEditor(QWidget *parent)
     installStyleSheets();
     setupLayout();
     makeConnections();
+    setWindowModality(Qt::ApplicationModal);
     setWindowFlags(Qt::FramelessWindowHint);
     setAttribute(Qt::WA_AcceptTouchEvents);
 }
@@ -26,16 +28,18 @@ void CheckListTextEditor::createMembers()
         QCheckBox* checkBox = new QCheckBox(meknab, m_mainWidget);
         m_checkBoxes.append(checkBox);
     }
-    m_textEdit = new QTextEdit(m_mainWidget);
+    m_textEdit = new CustomTextEdit(m_mainWidget);
     m_textEdit->setPlaceholderText("Մուտքագրել տեքստ...");
 
     m_acceptButton = new QPushButton("Հաստատել", m_mainWidget);
     m_cancelButton = new QPushButton("Չեղարկել", m_mainWidget);
+    // m_acceptButton = new QPushButton(QIcon(":icons/icon_accept.svg"), "", m_mainWidget);
+    // m_cancelButton = new QPushButton(QIcon(":icons/icon_cancel.svg"), "", m_mainWidget);
 }
 
 void CheckListTextEditor::installStyleSheets()
 {
-    this->setStyleSheet("QWidget{background: white;}" + TEXTBOX_STYLE_SHEET + CHECKBOX_STYLE_SHEET + PUSH_BUTTON_STYLE_SHEET);
+    this->setStyleSheet("QWidget{background: white;}" + TEXTBOX_STYLE_SHEET + MEKNAB_CHECKBOX_STYLE_SHEET + PUSH_BUTTON_STYLE_SHEET);
 }
 
 void CheckListTextEditor::setupLayout()

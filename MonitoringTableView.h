@@ -11,7 +11,8 @@ class MonitoringTableView : public QTableView
     Q_OBJECT
 public:
     explicit MonitoringTableView(QWidget *parent = nullptr);
-    void updateUiData(const QString& mkod, const QString& hskichkod);
+    void setTableData(const QString& mkod, const QString& hskichkod);
+    void refresh(bool removeFilter);
 
 private:
     void installStyleSheets();

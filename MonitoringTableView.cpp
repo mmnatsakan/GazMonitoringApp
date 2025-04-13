@@ -4,6 +4,7 @@
 #include "Constants.h"
 #include "CheckListTextEditor.h"
 #include "DetailsWidget.h"
+#include "InputDialog.h"
 #include "NumericDelegate.h"
 
 #include <QHeaderView>
@@ -25,7 +26,7 @@ MonitoringTableView::MonitoringTableView(QWidget *parent)
     setModel(m_model);
 }
 
-void MonitoringTableView::updateUiData(const QString& mkod, const QString& hskichkod)
+void MonitoringTableView::setTableData(const QString& mkod, const QString& hskichkod)
 {
     m_model->clear();
 
@@ -34,13 +35,19 @@ void MonitoringTableView::updateUiData(const QString& mkod, const QString& hskic
     }
     m_model->setMkodHskichkod(mkod, hskichkod);
 
-    setColumnWidth(AAH_COLUMN_INDEX, 150);
-    setColumnWidth(HASCE_COLUMN_INDEX, 180);
+    setColumnWidth(AAH_COLUMN_INDEX, 140);
+    setColumnWidth(HASCE_COLUMN_INDEX, 150);
+
     hideColumn(KNIQNER_COLUMN_INDEX);
     hideColumn(HASHXMNER_COLUMN_INDEX);
-//    hideColumn(HASCE_COLUMN_INDEX);
+    hideColumn(PRIZ_STUG_COLUMN_INDEX);
     // NumericDelegate* editor = new NumericDelegate(this);
     // setItemDelegateForColumn(HASHVERC_COLUMN_INDEX, editor);
+}
+
+void MonitoringTableView::refresh(bool removeFilter)
+{
+    m_model->refresh(removeFilter);
 }
 
 void MonitoringTableView::installStyleSheets()
@@ -58,6 +65,7 @@ void MonitoringTableView::installStyleSheets()
 
     verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
     verticalHeader()->setDefaultSectionSize(50);
+    //verticalHeader()->setFixedWidth(50);
 
     verticalScrollBar()->setContextMenuPolicy(Qt::NoContextMenu);
     horizontalScrollBar()->setContextMenuPolicy(Qt::NoContextMenu);
@@ -72,27 +80,24 @@ void MonitoringTableView::installStyleSheets()
 void MonitoringTableView::makeConnections()
 {
     connect(m_model, &SqlQueryModel::filledRowsCountsChanged, this, &MonitoringTableView::filledRowsCountsChanged);
-    //connect(this, &QTableView::clicked, this, [=](const QModelIndex &index) { edit(index); });
+    connect(this, &QTableView::clicked, this, [=](const QModelIndex &index) { edit(index); });
     connect(horizontalHeader(), &QHeaderView::sectionClicked, this, &MonitoringTableView::onHorizontalHeaderSectionClickedSlot);
 }
 
 void MonitoringTableView::showDetails(const QString &value, bool searchByAbonhamar)
 {
-    DetailsWidget* dlg = new DetailsWidget(m_model->getDetails(value, searchByAbonhamar), nullptr);
-    dlg->setWindowFlags(Qt::Popup);
-    dlg->show();
+    DetailsWidget* dlg = new DetailsWidget(m_model->getDetails(value, searchByAbonhamar), this);
+    dlg->showFullScreen();
 }
 
 void MonitoringTableView::onHorizontalHeaderSectionClickedSlot(int section)
 {
     if(section == ABONHAMAR_COLUMN_INDEX || section == HASHVICHN_COLUMN_INDEX){
         bool searchByAbonhamar = section == ABONHAMAR_COLUMN_INDEX;
-        QInputDialog dlg;
-        dlg.setWindowTitle(searchByAbonhamar ? "Փնտրել բաժանորդային համարով" : "Փնտրել հաշվիչի համարով");
-        //dlg.setLabelText("Please enter some text:");
-        //dlg.setTextValue("Default Value");
+        InputDialog dlg(this);
+        dlg.setLabelText(searchByAbonhamar ? "Մուտքագրել բաժանորդային համարը" : "Մուտքագրել հաշվիչի համարը");
         if (dlg.exec() == QDialog::Accepted) {
-            showDetails(dlg.textValue(), searchByAbonhamar);
+            showDetails(dlg.getTextValue(), searchByAbonhamar);
         }
     }
 }

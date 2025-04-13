@@ -10,9 +10,8 @@
 
 MonitoringPage::MonitoringPage(QWidget *parent)
     : QWidget{parent}
-    , m_maxSparum(1000)
 {
-    setMinimumSize(1200, 800);
+    //setMinimumSize(1200, 800);
 
     createMembers();
     installStyleSheets();
@@ -22,19 +21,14 @@ MonitoringPage::MonitoringPage(QWidget *parent)
     setAttribute(Qt::WA_AcceptTouchEvents);
 }
 
-void MonitoringPage::updateData(QMap<QString, QString> topWidgetDataMap)
-{
-    m_ttLabel->setText(topWidgetDataMap["tt"]);
-    m_hskichLabel->setText(topWidgetDataMap["hskich"]);
-    m_tableView->updateUiData(topWidgetDataMap["tt"].left(2), topWidgetDataMap["hskich"].left(2));
-}
-
 void MonitoringPage::createMembers()
 {
     m_mainWidget = new QWidget(this);
 
     m_goToStartPageButton = new QPushButton("Հետ", m_mainWidget);
-    m_goToStartPageButton->setFixedSize(80, 30);
+//    m_goToStartPageButton = new QPushButton(QIcon(":icons/icon_back.svg"), "", m_mainWidget);
+
+    m_goToStartPageButton->setFixedSize(80, 40);
 
     m_showAllCheckBox = new QCheckBox("Բոլորը", m_mainWidget);
 
@@ -91,4 +85,17 @@ void MonitoringPage::makeConnections()
     connect(m_tableView, &MonitoringTableView::filledRowsCountsChanged, this, [=](const QString& filledCount, const QString& totalCount){
         m_abonentCountLabel->setText(filledCount + " / " + totalCount);
     });
+    connect(m_showAllCheckBox, &QCheckBox::clicked,[=](bool checked){
+        m_tableView->refresh(checked);
+        // update();
+        // repaint();
+    });
+}
+
+void MonitoringPage::updateData(QMap<QString, QString> topWidgetDataMap)
+{
+    m_ttLabel->setText(topWidgetDataMap["tt"]);
+    m_hskichLabel->setText(topWidgetDataMap["hskich"]);
+    m_tableView->setTableData(topWidgetDataMap["tt"].left(2), topWidgetDataMap["hskich"].left(2));
+    m_showAllCheckBox->setChecked(false);
 }

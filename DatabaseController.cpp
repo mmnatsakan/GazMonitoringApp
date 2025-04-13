@@ -1,4 +1,5 @@
 #include "DatabaseController.h"
+#include "AndroidHelper.h"
 
 #include <QObject>
 #include <QSqlDatabase>
@@ -91,13 +92,13 @@ void requestPermission(const QString &permissionStr, int requestCode = 1234)
 #endif
 
 bool DatabaseController::openDatabase() {
+    QString dbFilePath;
 #ifdef ANDROID
-    // if(!copyDatabaseIfNeeded())
+    //if(!copyDatabaseIfNeeded())
     //     QApplication::quit();
-    //QString writablePath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-    QString dbFilePath = QStandardPaths::writableLocation(QStandardPaths::DownloadLocation) + "/Monitoring.sqlite";
+    dbFilePath = QStandardPaths::writableLocation(QStandardPaths::DownloadLocation) + "/Monitoring.sqlite";
 #else
-    QString dbFilePath = "D:/Monitoring.sqlite";
+    dbFilePath = "D:/Monitoring.sqlite";
 
 #endif
 
@@ -105,12 +106,10 @@ bool DatabaseController::openDatabase() {
     m_db.setDatabaseName(dbFilePath);
 
     if (!m_db.open()) {
-        //QMessageBox::information(nullptr, "Error opening database:", m_db.lastError().text());
-        qWarning() << "Error opening database:" << m_db.lastError().text();
+        QMessageBox::information(nullptr, "Error opening database:", m_db.lastError().text());
         return false;
     } else {
-        //QMessageBox::information(nullptr, "Database opened successfully.", dbFilePath);
-        qDebug() << "Database opened successfully.";
+        QMessageBox::information(nullptr, "Database opened successfully.", dbFilePath);
         return true;
     }
 }
@@ -130,14 +129,12 @@ QStringList DatabaseController::getTtList()
 
     if (!query.exec()) {
         QMessageBox::information(nullptr, "Query execution failed:", query.lastError().text());
-        qWarning() << "Query execution failed:" << query.lastError().text();
         return dataList;
     }
 
     while (query.next()) {
         dataList << query.value(0).toString();
     }
-    //QMessageBox::information(nullptr, "Query execution!:", "OKOKOKOKOKOKOKOKOK");
 
     return dataList;
 }
@@ -146,20 +143,18 @@ QStringList DatabaseController::getHskichList(const QString &mkod)
 {
     QStringList dataList;
     QSqlQuery query;
-    query.prepare(QString("SELECT %1 || '_' || %2 as name FROM %3 a "
-                          " INNER JOIN (select distinct mkod, hskichkod from %4) b on a.mkod = b.mkod and a.kod = b.hskichkod "
-                          " where a.mkod = %5").arg("kod", "anun", "Hskich", "cucak", mkod));
+    query.prepare(QString("SELECT %1 as name FROM %2 a "
+                          " INNER JOIN (select distinct mkod, hskichkod from %3 where priz_stug = 1) b on a.mkod = b.mkod and a.kod = b.hskichkod "
+                          " where a.mkod = %4 order by a.kod").arg("anun", "Hskich", "cucak", mkod));
 
     if (!query.exec()) {
         QMessageBox::information(nullptr, "HSKICH Query execution failed:", query.lastError().text());
-        qWarning() << "Query execution failed:" << query.lastError().text();
         return dataList;
     }
 
     while (query.next()) {
         dataList << query.value(0).toString();
     }
-    //QMessageBox::information(nullptr, "HSKICH Query execution!:", "OKOKOKOKOKOKOKOKOK");
 
     return dataList;
 }

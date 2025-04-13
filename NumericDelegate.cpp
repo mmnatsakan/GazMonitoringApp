@@ -6,6 +6,8 @@
 #include <QTimer>
 
 QWidget *NumericDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const {
+    Q_UNUSED(option);
+    Q_UNUSED(index);
     QLineEdit *editor = new QLineEdit(parent);
     forceKeyboard(editor);
     editor->setInputMethodHints(Qt::ImhDigitsOnly);
@@ -34,9 +36,9 @@ QWidget *NumericDelegate::createEditor(QWidget *parent, const QStyleOptionViewIt
 void NumericDelegate::forceKeyboard(QWidget *widget) const
 {
     widget->setFocus();
-    QTimer::singleShot(0, []() {
+    QTimer::singleShot(00, []() {
         QInputMethod *im = QGuiApplication::inputMethod();
         if (im)
-            im->show();
+            im->hide();
     });
 }

@@ -7,6 +7,7 @@
 
 class QLabel;
 class QTableWidget;
+class QPushButton;
 
 class DetailsWidget : public QDialog
 {
@@ -23,7 +24,7 @@ private:
     QWidget* m_mainWidget;
     QLabel* m_customerLabel;
     QTableWidget* m_tableWidget;
-
+    QPushButton* m_closeButton;
 };
 
 #endif // DETAILSWIDGET_H
