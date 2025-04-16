@@ -1,4 +1,3 @@
-#include "MainWindow.h"
 #include "SearchAbonentWidget.h"
 
 #include <QApplication>
@@ -18,8 +17,8 @@ int main(int argc, char *argv[])
     //system("chcp 65001");
 //#endif
 
-    MainWindow w;
-    //SearchAbonentWidget w;
+    //MainWindow w;
+    SearchAbonentWidget w;
     w.show();
     return a.exec();
 }

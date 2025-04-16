@@ -9,28 +9,20 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    CucBlankPage.cpp \
-    CucBlankTableView.cpp \
     DatabaseController.cpp \
     DetailsWidget.cpp \
     JsonParser.cpp \
-    MainWindow.cpp \
     SearchAbonentWidget.cpp \
     SqlQueryModel.cpp \
-    StartPage.cpp \
     main.cpp
 
 HEADERS += \
-    CucBlankPage.h \
-    CucBlankTableView.h \
     DatabaseController.h \
     DetailsWidget.h \
     Json/Json.h \
     JsonParser.h \
-    MainWindow.h \
     SearchAbonentWidget.h \
     SqlQueryModel.h \
-    StartPage.h \
     UIStyle.h
 
 # Default rules for deployment.
@@ -41,4 +33,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 RESOURCES += \
     Resources.qrc
 
-DISTFILES +=
+INCLUDEPATH += $$PWD
+

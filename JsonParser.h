@@ -21,7 +21,7 @@ struct MainData
     QString sot_hamar;
     QString hashvich;
     QString hashvichn;
-    QString kniq;
+    QString hashnaxc;
     QList<AmisData> tableDataList;
 };
 
