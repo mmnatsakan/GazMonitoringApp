@@ -41,8 +41,8 @@ void MonitoringTableView::setTableData(const QString& mkod, const QString& hskic
     hideColumn(KNIQNER_COLUMN_INDEX);
     hideColumn(HASHXMNER_COLUMN_INDEX);
     hideColumn(PRIZ_STUG_COLUMN_INDEX);
-    // NumericDelegate* editor = new NumericDelegate(this);
-    // setItemDelegateForColumn(HASHVERC_COLUMN_INDEX, editor);
+    NumericDelegate* editor = new NumericDelegate(this);
+    setItemDelegateForColumn(HASHVERC_COLUMN_INDEX, editor);
 }
 
 void MonitoringTableView::refresh(bool removeFilter)
@@ -80,7 +80,7 @@ void MonitoringTableView::installStyleSheets()
 void MonitoringTableView::makeConnections()
 {
     connect(m_model, &SqlQueryModel::filledRowsCountsChanged, this, &MonitoringTableView::filledRowsCountsChanged);
-    connect(this, &QTableView::clicked, this, [=](const QModelIndex &index) { edit(index); });
+    //connect(this, &QTableView::clicked, this, [=](const QModelIndex &index) { edit(index); });
     connect(horizontalHeader(), &QHeaderView::sectionClicked, this, &MonitoringTableView::onHorizontalHeaderSectionClickedSlot);
 }
 
@@ -112,20 +112,24 @@ void MonitoringTableView::mouseReleaseEvent(QMouseEvent *event)
             if(dlg->exec() == QDialog::Accepted)
                 m_model->setData(currentIndex, dlg->getData(), Qt::EditRole);
             dlg->deleteLater();
+            update();
+            repaint();
             return;
         }
         if(currentIndex.column() == ABONHAMAR_COLUMN_INDEX || currentIndex.column() == HASHVICHN_COLUMN_INDEX){
             showDetails(m_model->data(currentIndex, Qt::DisplayRole).toString(), currentIndex.column() == ABONHAMAR_COLUMN_INDEX);
+            update();
+            repaint();
             return;
         }
-        qDebug() << currentIndex << "  0000000000000000000000000000000";
-        currentIndex = model()->index(currentIndex.row(), HASHVERC_COLUMN_INDEX);
-        selectionModel()->clearSelection();
-        selectionModel()->select(currentIndex, QItemSelectionModel::Select | QItemSelectionModel::Current);
-        setCurrentIndex(currentIndex);
+        // qDebug() << currentIndex << "  0000000000000000000000000000000";
+        // currentIndex = model()->index(currentIndex.row(), HASHVERC_COLUMN_INDEX);
+        // selectionModel()->clearSelection();
+        // selectionModel()->select(currentIndex, QItemSelectionModel::Select | QItemSelectionModel::Current);
+        // setCurrentIndex(currentIndex);
 
-        qDebug() << currentIndex << "  1111111111111111111111111111111";
-        edit(currentIndex);
+        // qDebug() << currentIndex << "  1111111111111111111111111111111";
+        // edit(currentIndex);
     }
     QTableView::mousePressEvent(event);
 }

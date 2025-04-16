@@ -38,7 +38,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QApplication::setFont(appFont);
     //InputDialog w;
     MainWindow w;
-    w.show();
+    w.showFullScreen();
     return a.exec();
 }
 

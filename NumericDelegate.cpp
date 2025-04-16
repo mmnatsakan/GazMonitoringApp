@@ -36,9 +36,9 @@ QWidget *NumericDelegate::createEditor(QWidget *parent, const QStyleOptionViewIt
 void NumericDelegate::forceKeyboard(QWidget *widget) const
 {
     widget->setFocus();
-    QTimer::singleShot(00, []() {
+    QTimer::singleShot(0, []() {
         QInputMethod *im = QGuiApplication::inputMethod();
         if (im)
-            im->hide();
+            im->show();
     });
 }
