@@ -12,7 +12,7 @@ class MonitoringTableView : public QTableView
 public:
     explicit MonitoringTableView(QWidget *parent = nullptr);
     void setTableData(const QString& mkod, const QString& hskichkod);
-    void refresh(bool removeFilter);
+    void refresh(bool useFilter);
 
 private:
     void installStyleSheets();

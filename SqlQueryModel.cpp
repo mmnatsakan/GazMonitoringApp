@@ -16,12 +16,11 @@ SqlQueryModel::SqlQueryModel(QObject* parent)
 
 }
 
-void SqlQueryModel::refresh(bool removeFilter) {
+void SqlQueryModel::refresh(bool useFilter) {
     QSqlQuery query(QSqlDatabase::database());
-    query.prepare(m_baseQuery.arg(m_mainTable) + (removeFilter ? "" : m_filterString));
+    query.prepare(m_baseQuery.arg(m_mainTable) + (useFilter ? m_filterString : ""));
     query.bindValue(":mkod", m_mkod);
     query.bindValue(":hskichkod", m_hskichkod);
-    qDebug() << query.lastQuery();
     if (!query.exec()) {
         qWarning() << "Query execution failed:" << query.lastError();
         return;
@@ -30,6 +29,7 @@ void SqlQueryModel::refresh(bool removeFilter) {
     if (m_baseQuery.trimmed().toUpper().startsWith("SELECT")) {
         setQuery(std::move(query));
     }
+    sendCountsInfo();
 }
 
 Qt::ItemFlags SqlQueryModel::flags(const QModelIndex &index) const {
@@ -40,11 +40,9 @@ Qt::ItemFlags SqlQueryModel::flags(const QModelIndex &index) const {
 }
 
 bool SqlQueryModel::setData(const QModelIndex &index, const QVariant &value, int role) {
-    if (role != Qt::EditRole || !updateMainTable(index, value))
+    if (role != Qt::EditRole || data(index) == value || !updateMainTable(index, value))
         return false;
-
-    this->setQuery(this->query().lastQuery());
-    emit dataChanged(index, index);
+    refresh();
     return true;
 }
 
@@ -53,8 +51,6 @@ void SqlQueryModel::setMkodHskichkod(const QString &mkod, const QString &hskichk
     m_mkod = mkod;
     m_hskichkod = hskichkod;
     m_baseQuery = MONITORING_MODEL_BASE_QUERY;
-    refresh();
-    sendCountsInfo();
 }
 
 bool SqlQueryModel::updateMainTable(const QModelIndex &index, const QVariant &value)
@@ -71,7 +67,7 @@ bool SqlQueryModel::updateMainTable(const QModelIndex &index, const QVariant &va
         return false;
     }
     QSqlQuery query;
-    query.prepare(QString("UPDATE %1 SET %2 = :value WHERE mkod = :mkod and abonhamar = :abonhamar ").arg(m_mainTable).arg(columnName));
+    query.prepare(QString("UPDATE %1 SET %2 = :value WHERE mkod = :mkod and abonhamar = :abonhamar ").arg(m_mainTable, columnName));
 
     query.bindValue(":value", value);
     query.bindValue(":mkod", m_mkod);
@@ -115,7 +111,6 @@ Utils::MainData SqlQueryModel::getDetails(const QString &value, bool searchByAbo
                             "FROM %1 WHERE mkod = :mkod AND trim(%2) = :value ").arg(m_mainTable).arg(searchByAbonhamar ? "abonhamar" : "hashvichn"));
     query.bindValue(":mkod", m_mkod);
     query.bindValue(":value", value);
-    qDebug() << query.lastQuery();
     query.exec();
 
     Utils::MainData mainData;

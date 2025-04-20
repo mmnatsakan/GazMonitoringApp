@@ -24,7 +24,7 @@ private:
     QWidget* m_mainWidget;
 
     QPushButton* m_goToStartPageButton;
-    QCheckBox* m_showAllCheckBox;
+    QCheckBox* m_showFilteredCheckBox;
 
     QLabel* m_abonentCountLabel;
     QLabel* m_ttLabel;

@@ -14,7 +14,7 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const override;
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
     void setMkodHskichkod(const QString& mkod, const QString& hskichkod);
-    void refresh(bool removeFilter = false);
+    void refresh(bool useFilter = true);
     void sendCountsInfo();
     Utils::MainData getDetails(const QString& value, bool searchByAbonhamar) const;
 

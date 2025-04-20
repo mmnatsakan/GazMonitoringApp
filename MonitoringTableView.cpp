@@ -34,7 +34,12 @@ void MonitoringTableView::setTableData(const QString& mkod, const QString& hskic
         m_model->setHeaderData(i, Qt::Horizontal, MONITORING_HEADERS_LIST[i]);
     }
     m_model->setMkodHskichkod(mkod, hskichkod);
+    refresh(true);
+}
 
+void MonitoringTableView::refresh(bool useFilter)
+{
+    m_model->refresh(useFilter);
     setColumnWidth(AAH_COLUMN_INDEX, 140);
     setColumnWidth(HASCE_COLUMN_INDEX, 150);
 
@@ -43,11 +48,6 @@ void MonitoringTableView::setTableData(const QString& mkod, const QString& hskic
     hideColumn(PRIZ_STUG_COLUMN_INDEX);
     NumericDelegate* editor = new NumericDelegate(this);
     setItemDelegateForColumn(HASHVERC_COLUMN_INDEX, editor);
-}
-
-void MonitoringTableView::refresh(bool removeFilter)
-{
-    m_model->refresh(removeFilter);
 }
 
 void MonitoringTableView::installStyleSheets()
@@ -63,9 +63,8 @@ void MonitoringTableView::installStyleSheets()
     horizontalHeader()->setSectionResizeMode(QHeaderView::Custom);
     horizontalHeader()->setStretchLastSection(true);
 
-    verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+    verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     verticalHeader()->setDefaultSectionSize(50);
-    //verticalHeader()->setFixedWidth(50);
 
     verticalScrollBar()->setContextMenuPolicy(Qt::NoContextMenu);
     horizontalScrollBar()->setContextMenuPolicy(Qt::NoContextMenu);
@@ -130,6 +129,12 @@ void MonitoringTableView::mouseReleaseEvent(QMouseEvent *event)
 
         // qDebug() << currentIndex << "  1111111111111111111111111111111";
         // edit(currentIndex);
+
+        // if (m_model->flags(currentIndex) & Qt::ItemIsEditable) {
+        //     setCurrentIndex(currentIndex); // Update selection
+        //     edit(currentIndex);            // Trigger edit
+        //     return;
+        // }
     }
     QTableView::mousePressEvent(event);
 }

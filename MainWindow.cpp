@@ -14,8 +14,10 @@ MainWindow::MainWindow(QWidget *parent)
     createMembers();
     makeConnections();
     setupLayout();
+#ifdef ANDROID
     setWindowFlags(Qt::FramelessWindowHint);
     setAttribute(Qt::WA_AcceptTouchEvents);
+#endif
 }
 
 void MainWindow::createMembers()

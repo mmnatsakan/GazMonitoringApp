@@ -30,7 +30,7 @@ void MonitoringPage::createMembers()
 
     m_goToStartPageButton->setFixedSize(80, 40);
 
-    m_showAllCheckBox = new QCheckBox("Բոլորը", m_mainWidget);
+    m_showFilteredCheckBox = new QCheckBox("Ցուցակից", m_mainWidget);
 
     m_abonentCountLabel = new QLabel(m_mainWidget);
     m_ttLabel = new QLabel(m_mainWidget);
@@ -42,7 +42,7 @@ void MonitoringPage::createMembers()
 void MonitoringPage::installStyleSheets()
 {
     m_goToStartPageButton->setStyleSheet(PUSH_BUTTON_STYLE_SHEET);
-    m_showAllCheckBox->setStyleSheet(CHECKBOX_STYLE_SHEET);
+    m_showFilteredCheckBox->setStyleSheet(CHECKBOX_STYLE_SHEET);
     m_abonentCountLabel->setStyleSheet("font-size: 18px; color: green; font-weight: 600; border: none;");
     m_ttLabel->setStyleSheet("font-size: 18px; color: black; font-weight: 600; border: none;");
     m_hskichLabel->setStyleSheet("font-size: 18px; color: black; font-weight: 600; border: none;");
@@ -60,7 +60,7 @@ void MonitoringPage::setupLayout()
     topLayout->addStretch();
     topLayout->addWidget(m_ttLabel);
     topLayout->addStretch();
-    topLayout->addWidget(m_showAllCheckBox);
+    topLayout->addWidget(m_showFilteredCheckBox);
     topLayout->addStretch();
     topLayout->addWidget(m_hskichLabel);
     topLayout->addStretch();
@@ -85,7 +85,7 @@ void MonitoringPage::makeConnections()
     connect(m_tableView, &MonitoringTableView::filledRowsCountsChanged, this, [=](const QString& filledCount, const QString& totalCount){
         m_abonentCountLabel->setText(filledCount + " / " + totalCount);
     });
-    connect(m_showAllCheckBox, &QCheckBox::clicked,[=](bool checked){
+    connect(m_showFilteredCheckBox, &QCheckBox::checkStateChanged,[=](bool checked){
         m_tableView->refresh(checked);
         // update();
         // repaint();
@@ -97,5 +97,5 @@ void MonitoringPage::updateData(QMap<QString, QString> topWidgetDataMap)
     m_ttLabel->setText(topWidgetDataMap["tt"]);
     m_hskichLabel->setText(topWidgetDataMap["hskich"]);
     m_tableView->setTableData(topWidgetDataMap["tt"].left(2), topWidgetDataMap["hskich"].left(2));
-    m_showAllCheckBox->setChecked(false);
+    m_showFilteredCheckBox->setChecked(true);
 }
